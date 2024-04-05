@@ -1,0 +1,68 @@
+﻿@model EmployeeMasterKadai.Models.Schedule
+@using EmployeeMasterKadai.Common
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h3>本当に削除しますか？</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Organizer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Organizer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TypeToDo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TypeToDo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AllDay)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AllDay)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDay)
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                var startDayFormat = new DateFormat();
+                var formattedStartDatDate = startDayFormat.Format(Model.StartDay, "yyyy年MM月dd日 hh:mm");
+            }
+            @formattedStartDatDate
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDay)
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                var endDayFormat = new DateFormat();
+                var formattedEndDayDate = endDayFormat.Format(Model.EndDay, "yyyy年MM月dd日 hh:mm");
+            }
+            @formattedEndDayDate
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.JoinPeople)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.JoinPeople)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="削除" class="btn btn-danger" /> |
+        <a asp-action="Index">戻る</a>
+    </form>
+</div>
