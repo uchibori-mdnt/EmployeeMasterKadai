@@ -3,6 +3,9 @@
 @{
     Layout = null;
     ViewData["Title"] = "Create";
+
+    //※※※豆知識：アクション名を取得する方法
+    string action = ViewContext.RouteData.Values["Action"]!.ToString()!;
 }
 
 <h3>社員の登録</h3>
@@ -68,10 +71,11 @@
     </div>
 </div>
 
-
-@section Scripts {
+@* ※※※このCreate.cshtmlはモーダルなので下記のコードは読み込まれません。Index.cshtmlに移動しましょう。モーダルをajaxで取得した後、validationをonにしましょう *@
+@* @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
 
     </script>
 }
+ *@

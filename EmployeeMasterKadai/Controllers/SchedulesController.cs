@@ -61,7 +61,7 @@ namespace EmployeeMasterKadai.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
         {
-       
+
             if (ModelState.IsValid)
             {
                 schedule.CreateDate = DateTime.Now;
@@ -71,8 +71,8 @@ namespace EmployeeMasterKadai.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-           
-          
+
+
             return View(schedule);
         }
 

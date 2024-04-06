@@ -41,7 +41,8 @@ namespace EmployeeMasterKadai.Controllers
         // GET: EmployeeLists/Create
         public IActionResult Create()
         {
-            return View();
+            //※※※ajaxなどの部分ビューを返すときは"PartialView"で
+            return PartialView();
         }
 
         // POST: EmployeeLists/Create
@@ -58,9 +59,13 @@ namespace EmployeeMasterKadai.Controllers
                 employeeList.Id = Guid.NewGuid();
                 _context.Add(employeeList);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //※※※こっちもJson
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success =true });
             }
-            return View(employeeList);
+            //※※※ajaxなどの部分ビューを返すときは"PartialView"で
+            return PartialView(employeeList);
         }
 
         // GET: EmployeeLists/Edit/5

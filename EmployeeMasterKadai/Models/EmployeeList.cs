@@ -1,6 +1,6 @@
 ﻿using EmployeeMasterKadai.Validations;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMasterKadai.Models
 {
@@ -19,9 +19,11 @@ namespace EmployeeMasterKadai.Models
         [DisplayName("退職フラグ")]
         public bool RetirementFlag { get; set; }
         [DisplayName("退職日")]
+        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日}", NullDisplayText = "")] //※※※フォーマットを指定できます
         [DataType(DataType.DateTime)]
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
-        public DateTime RetirementDay { get; set; }
+        [RequiredIf(nameof(RetirementFlag), true, ErrorMessage = "退職日を入力してください")]
+        public DateTime? RetirementDay { get; set; } //※※※退職フラグ次第でnullでも良いところなので"?"
         [DisplayName("登録日時")]
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
