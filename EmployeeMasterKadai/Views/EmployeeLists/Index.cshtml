@@ -11,14 +11,6 @@
 </button>
 <br>
 
-@* ※※※メッセージ出すと分かりやすいかも *@
-@if (TempData["success"]!=null)
-{
-    <div class="alert alert-success">
-        @TempData["success"]
-    </div>
-}
-
 <table class="table">
     <thead>
         <tr>
@@ -97,7 +89,7 @@
 
 <!-- モーダルウィンドウ -->
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">　@*modal-sm、modal-lg*@
         <div class="modal-content">
             <div class="modal-body" id="modalContentPlaceholder"></div>
             @*

@@ -56,7 +56,13 @@
 
             <div class="form-group">
                 <label asp-for="JoinPeople" class="control-label">参加者：</label>
-               <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
+
+                // ※※※ bootstrap5.X系でbootstrap-multiselectを使いたいとき
+                @Html.DropDownListFor(model => model.JoinPeople, new SelectList(Model.JoinPeople), null, new { @class = "multiple form-select", multiple = "multiple" })
+
+                // ※※※ ↓私はこっちの方がクリック数が少なくて好きです
+                @*
+                    <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
 
                     @foreach (var name in Model.JoinPeople)
                     {
@@ -65,7 +71,7 @@
                             <label class="form-check-label" for="@name">@name</label>
                         </div>
                     }
-                </div>
+                </div> *@
                 <span asp-validation-for="JoinPeople" class="text-danger"></span>
             </div>
 
@@ -82,7 +88,8 @@
     </div>
 </div>
 
-@section Scripts {
+@* ※※※このcshtmlはモーダルなので下記のコードは読み込まれません。Index.cshtmlに移動しましょう。モーダルをajaxで取得した後、validationをonにしましょう *@
+@* @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
@@ -92,3 +99,4 @@
 
     </script>
 }
+ *@

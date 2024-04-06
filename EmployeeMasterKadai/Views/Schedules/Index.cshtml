@@ -39,48 +39,49 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Organizer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TypeToDo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AllDay)
-            </td>
-            <td>
-                @{
-                    var startDayFormat = new DateFormat();
-                    var formattedStartDatDate = startDayFormat.Format(item.StartDay, "yyyy年MM月dd日 hh:mm");
-                }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organizer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeToDo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllDay)
+                </td>
+                <td>
+                    @{
+                        var startDayFormat = new DateFormat();
+                        var formattedStartDatDate = startDayFormat.Format(item.StartDay, "yyyy年MM月dd日 hh:mm");
+                    }
                     @formattedStartDatDate
-            </td>
-            <td>
-                @{
-                    var endDayFormat = new DateFormat();
-                    var formattedEndDayDate = endDayFormat.Format(item.EndDay, "yyyy年MM月dd日 hh:mm");
-                }
-                @formattedEndDayDate
-            </td>
-            <td>
-                @foreach (var person in item.JoinPeople)
-                {
-                    <div>@person</div>
-                }
-            </td>
-            <td>
+                </td>
+                <td>
+                    @{
+                        var endDayFormat = new DateFormat();
+                        var formattedEndDayDate = endDayFormat.Format(item.EndDay, "yyyy年MM月dd日 hh:mm");
+                    }
+                    @formattedEndDayDate
+                </td>
+                <td>
+                    @foreach (var person in item.JoinPeople)
+                    {
+                        <div>@person</div>
+                    }
+                </td>
+                <td>
                     <button type="button" class="btn btn-primary editModal" data-id="@item.Id">
                         編集<i class="bi bi-person-add"></i>
                     </button>
-                <a asp-action="Delete" asp-route-id="@item.Id">削除</a>
-            </td>
-        </tr>
-}
+                    <a asp-action="Delete" asp-route-id="@item.Id">削除</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
@@ -95,40 +96,54 @@
 </div>
 
 
-<script>
-    $(document).ready(function () {
-        // 編集モーダルを表示するボタンがクリックされた場合
-        $('.editModal').on('click', function (e) {
-            e.preventDefault();
-            $('#externalModal').modal('show');
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // 編集モーダルを表示するボタンがクリックされた場合
+            $('.editModal').on('click', function (e) {
+                e.preventDefault();
+                $('#externalModal').modal('show');
 
-            var itemId = $(this).data('id');
+                var itemId = $(this).data('id');
 
-            $.ajax({
-                url: '/Schedules/Edit/' + itemId,
-                type: 'GET',
-                success: function (data) {
-                    $('#modalContentPlaceholder').html(data);
-                }
+                $.ajax({
+                    url: '/Schedules/Edit/' + itemId,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#modalContentPlaceholder').html(data);
+                    }
+                });
+            });
+
+            // 追加モーダルを表示するボタンがクリックされた場合
+            $('#createModal').on('click', function (e) {
+                e.preventDefault();
+                $('#externalModal').modal('show');
+
+                $.ajax({
+                    url: '/Schedules/Create',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#modalContentPlaceholder').html(data);
+
+                        // ※※※ bootstrap5.X系でbootstrap-multiselectを使いたいとき
+                        $('#JoinPeople').multiselect({
+                            buttonClass: 'form-select',
+                            nonSelectedText: '選択してください',
+                            templates: {
+                                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                            }
+                        });
+                    }
+                });
+            });
+            $('.modal').on('click', function (e) {
+                if (e.target !== this) return;
+                $('#externalModal').modal('hide')
             });
         });
-
-        // 追加モーダルを表示するボタンがクリックされた場合
-        $('#createModal').on('click', function (e) {
-            e.preventDefault();
-            $('#externalModal').modal('show');
-
-            $.ajax({
-                url: '/Schedules/Create',
-                type: 'GET',
-                success: function (data) {
-                    $('#modalContentPlaceholder').html(data);
-                }
-            });
-        });
-        $('.modal').on('click', function (e) {
-            if (e.target !== this) return;
-            $('#externalModal').modal('hide')
-        });
-    });
-</script>
+    </script>
+}
