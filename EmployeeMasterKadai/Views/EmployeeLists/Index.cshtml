@@ -85,12 +85,9 @@
 
 <!-- モーダルウィンドウ -->
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-body" id="modalContentPlaceholder"></div>
-            @* 
-                モーダルの中にエラーを表示させたい
-            <div id="errorMessages"></div> *@
+            <div class="modal-body" id="modalContentPlaceholder" ></div>
         </div>
     </div>
 </div>
@@ -149,7 +146,7 @@
 
 
 
-
+    //Ajax
     // $(document).ready(function () {
     //     $('.openEditModal').on('click', function (e) {
     //         e.preventDefault();
@@ -185,36 +182,4 @@
     //     });
     // });
 
-
-
-
-
-    //モーダルの中にエラーを表示させたい
-    // $(document).ready(function () {
-    //     $('#submitFormButton').on('click', function (e) {
-    //         e.preventDefault(); 
-
-    //         var formData = $('#formData').serialize();
-
-    //         console.log(formData);
-
-    //         $.ajax({
-    //             url: '/Schedules/Create',
-    //             type: 'POST',
-    //             data: formData,
-    //             success: function (response) {
-    //                 if (!response.success) {
-
-    //                     $('#errorMessages').empty();
-    //                     $.each(response.message.split('; '), function (index, errorMessage) {
-    //                         $('#errorMessages').append('<p>' + errorMessage + '</p>');
-    //                     });
-    //                 }
-    //                 else {
-    //                     $('#externalModal').modal('hide');
-    //                 }
-    //             },
-    //         });
-    //     });
-    // });
 </script>

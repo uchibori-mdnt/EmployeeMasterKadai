@@ -2,7 +2,6 @@
 @using EmployeeMasterKadai.Models
 
 @{
-    Layout = null;
     ViewData["Title"] = "Create";
 }
 
@@ -72,7 +71,7 @@
 
             <div class="d-flex flex-row-reverse">
                 <div class="p-2">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="登録" class="btn btn-primary" />
                 </div>
                 <div class="p-2">
                     <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
@@ -81,6 +80,13 @@
         </form>
     </div>
 </div>
+
+<footer class="border-top footer text-muted" style="display: none;">
+    <div class="container">
+        &copy; medinet,inc.
+    </div>
+</footer>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

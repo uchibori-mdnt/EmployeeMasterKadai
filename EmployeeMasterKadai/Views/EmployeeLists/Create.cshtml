@@ -1,7 +1,6 @@
 ﻿@model EmployeeMasterKadai.Models.EmployeeList
 
 @{
-    Layout = null;
     ViewData["Title"] = "Create";
 }
 
@@ -72,6 +71,8 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-
+        $(document).ready(function () {
+            $('#joinPeople').multiselect();
+        });
     </script>
 }
