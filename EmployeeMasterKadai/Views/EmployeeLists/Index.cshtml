@@ -47,13 +47,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.RetirementFlag)
             </td>
-            <td>
-                @{
-                    var retirementDayDateFormat = new DateFormat();
-                    var formattedRetirementDay = retirementDayDateFormat.Format(item.RetirementDay, "yyyy年MM月dd日");
-                }
-                @formattedRetirementDay
-            </td>
+                <td>
+                    @{
+                        if (item.RetirementDay.HasValue)
+                        {
+                            var retirementDayDateFormat = new DateFormat();
+                            var formattedRetirementDay = retirementDayDateFormat.Format(item.RetirementDay.Value, "yyyy年MM月dd日");
+                            @formattedRetirementDay
+                        }
+                    }
+                </td>
+
             <td>
                 @{
                     var createdAtDateFormat = new DateFormat();

@@ -38,7 +38,7 @@
         <dd class = "col-sm-10">
             @{
                 var startDayFormat = new DateFormat();
-                var formattedStartDatDate = startDayFormat.Format(Model.StartDay, "yyyy年MM月dd日 hh:mm");
+                var formattedStartDatDate = startDayFormat.Format(Model.StartDay.Value, "yyyy年MM月dd日 hh:mm");
             }
             @formattedStartDatDate
         </dd>
@@ -48,7 +48,7 @@
         <dd class = "col-sm-10">
             @{
                 var endDayFormat = new DateFormat();
-                var formattedEndDayDate = endDayFormat.Format(Model.EndDay, "yyyy年MM月dd日 hh:mm");
+                var formattedEndDayDate = endDayFormat.Format(Model.EndDay.Value, "yyyy年MM月dd日 hh:mm");
             }
             @formattedEndDayDate
         </dd>

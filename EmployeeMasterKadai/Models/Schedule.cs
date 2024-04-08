@@ -21,11 +21,11 @@ namespace EmployeeMasterKadai.Models
         public bool AllDay { get; set; }
         [DisplayName("開始日時")]
         [DataType(DataType.DateTime)]
-        public DateTime StartDay { get; set; }
+        public DateTime? StartDay { get; set; }
         [DisplayName("終了日時")]
         [SameDay(ErrorMessage = "開始時刻と終了時刻が同じになっています。")]
         [DataType(DataType.DateTime)]
-        public DateTime EndDay { get; set; }
+        public DateTime? EndDay { get; set; }
         [DisplayName("参加候補者")]
         public string[] JoinPeople { get; set; } = string.Empty.Split(',');
 

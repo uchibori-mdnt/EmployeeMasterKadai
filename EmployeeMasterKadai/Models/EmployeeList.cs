@@ -21,7 +21,7 @@ namespace EmployeeMasterKadai.Models
         [DisplayName("退職日")]
         [DataType(DataType.DateTime)]
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
-        public DateTime RetirementDay { get; set; }
+        public DateTime? RetirementDay { get; set; }
         [DisplayName("登録日時")]
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }

@@ -38,20 +38,23 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input id="AllDay" class="form-check-input" asp-for="AllDay" /> @Html.DisplayNameFor(model => model.AllDay)
+                    <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" onchange="checkAllDay(this)" />
+                    @Html.DisplayNameFor(model => model.AllDay)
                 </label>
             </div>
-            
-            <div class="form-group" id="startDay">
-                <label asp-for="StartDay" class="control-label"></label>
-                <input asp-for="StartDay" class="form-control" />
-                <span asp-validation-for="StartDay" class="text-danger"></span>
+            <div id="dateTimeInputs">
+                <div class="form-group" id="startDay">
+                    <label asp-for="StartDay" class="control-label"></label>
+                    <input asp-for="StartDay" class="form-control" />
+                    <span asp-validation-for="StartDay" class="text-danger"></span>
+                </div>
+                <div class="form-group" id="endDay">
+                    <label asp-for="EndDay" class="control-label"></label>
+                    <input asp-for="EndDay" class="form-control" />
+                    <span asp-validation-for="EndDay" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group" id="endDay">
-                <label asp-for="EndDay" class="control-label"></label>
-                <input asp-for="EndDay" class="form-control" />
-                <span asp-validation-for="EndDay" class="text-danger"></span>
-            </div>
+
 
             <div class="form-group">
                 <label asp-for="JoinPeople" class="control-label">参加者：</label>
@@ -89,5 +92,21 @@
         $(document).ready(function () {
             $('#joinPeople').multiselect();
         });
+
+        function checkAllDay(check) {
+            var allDayChecked = $(check).prop('checked');
+            var dateTimeInputs = $('#dateTimeInputs');
+
+            if (allDayChecked) {
+                $('#startDay input[type="datetime-local"]').prop('disabled', true);
+                $('#endDay input[type="datetime-local"]').prop('disabled', true);
+                dateTimeInputs.css('color', '#999999');
+            } else {
+                $('#startDay input[type="datetime-local"]').prop('disabled', false);
+                $('#endDay input[type="datetime-local"]').prop('disabled', false);
+                dateTimeInputs.css('color', '#000000');
+            }
+        }
+
     </script>
 }
