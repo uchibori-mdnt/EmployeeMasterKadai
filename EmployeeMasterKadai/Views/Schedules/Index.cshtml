@@ -55,17 +55,23 @@
             </td>
             <td>
                 @{
-                    var startDayFormat = new DateFormat();
+                    var startDayFormat = new DateFormat(); 
+                    if (item.StartDay != null)
+                    {
                         var formattedStartDatDate = startDayFormat.Format(item.StartDay.Value, "yyyy年MM月dd日 hh:mm");
+                        @formattedStartDatDate
+                    }
                 }
-                    @formattedStartDatDate
             </td>
             <td>
                 @{
                     var endDayFormat = new DateFormat();
+                    if (item.EndDay != null)
+                    {
                         var formattedEndDayDate = endDayFormat.Format(item.EndDay.Value, "yyyy年MM月dd日 hh:mm");
+                        @formattedEndDayDate
+                    }
                 }
-                @formattedEndDayDate
             </td>
             <td>
                 @foreach (var person in item.JoinPeople)

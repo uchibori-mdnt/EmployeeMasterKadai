@@ -24,6 +24,8 @@ namespace EmployeeMasterKadai.Models
         public DateTime? StartDay { get; set; }
         [DisplayName("終了日時")]
         [SameDay(ErrorMessage = "開始時刻と終了時刻が同じになっています。")]
+        [ChangeDateField(ErrorMessage = "開始時刻と終了時刻を入力してください。")]
+        [CheckReverseTime(ErrorMessage = "開始時刻が終了時刻を超えることはできません。")]
         [DataType(DataType.DateTime)]
         public DateTime? EndDay { get; set; }
         [DisplayName("参加候補者")]
