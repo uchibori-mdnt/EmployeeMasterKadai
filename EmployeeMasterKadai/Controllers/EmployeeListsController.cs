@@ -50,7 +50,7 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] EmployeeList employeeList)
+        public async Task<IActionResult> Create([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt")] EmployeeList employeeList)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt")] Employee employeeList)
         {
 
             var existingRecord = await _context.EmployeeList.FirstOrDefaultAsync(e => e.Id == id);

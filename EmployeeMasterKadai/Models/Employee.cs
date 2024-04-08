@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMasterKadai.Models
 {
-    public class EmployeeList
+    public class Employee
     {
         [Key]
         [ScaffoldColumn(false)]
