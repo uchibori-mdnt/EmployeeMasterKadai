@@ -85,101 +85,95 @@
 
 <!-- モーダルウィンドウ -->
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-body" id="modalContentPlaceholder" ></div>
+            <div class="modal-body" id="modalContentPlaceholder"></div>
         </div>
     </div>
 </div>
 
     <script>
-    //Ajax無し
-    document.addEventListener("DOMContentLoaded", function () {
-        var openEditModalButtons = document.querySelectorAll(".openEditModal");
-        openEditModalButtons.forEach(function (button) {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                document.getElementById("externalModal").classList.add("show");
-                document.getElementById("externalModal").style.display = "block";
+     $(document).ready(function () {
+        $('.openEditModal').on('click', function (e) {
+            e.preventDefault();
+            $('#externalModal').modal('show'); 
 
-                var itemId = button.dataset.id;
+            var itemId = $(this).data('id');
 
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function () {
-                    if (request.readyState === 4 && request.status === 200) {
-                        document.getElementById("modalContentPlaceholder").innerHTML = request.responseText;
-                    }
-                };
-                request.open("GET", "/EmployeeLists/Edit/" + itemId, true);
-                request.send();
+            $.ajax({
+                url: '/EmployeeLists/Edit/' + itemId,
+                type: 'GET',
+                success: function (data) {
+                    $('#modalContentPlaceholder').html(data);
+                }
             });
         });
 
-        document.getElementById("openCreateModal").addEventListener("click", function (event) {
-            event.preventDefault();
-            document.getElementById("externalModal").classList.add("show");
-            document.getElementById("externalModal").style.display = "block";
+        // 追加モーダルを表示するボタンがクリックされた場合
+        $('#openCreateModal').on('click', function (e) {
+            e.preventDefault();
+            $('#externalModal').modal('show');
 
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (request.readyState === 4 && request.status === 200) {
-                    document.getElementById("modalContentPlaceholder").innerHTML = request.responseText;
-                }
-            };
-            request.open("GET", "/EmployeeLists/Create", true);
-            request.send();
-        });
-
-        document.querySelectorAll(".modal").forEach(function (modal) {
-            modal.addEventListener("click", function (event) {
-                if (event.target === modal) {
-                    modal.classList.remove("show");
-                    modal.style.display = "none";
+            $.ajax({
+                url: '/EmployeeLists/Create',
+                type: 'GET',
+                success: function (data) {
+                    $('#modalContentPlaceholder').html(data);
                 }
             });
+        });
+        $('.modal').on('click', function (e) {
+            if (e.target !== this) return; 
+            $('#externalModal').modal('hide');
         });
     });
 
 
 
+    //Ajax無し
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     var openEditModalButtons = document.querySelectorAll(".openEditModal");
+    //     openEditModalButtons.forEach(function (button) {
+    //         button.addEventListener("click", function (event) {
+    //             event.preventDefault();
+    //             document.getElementById("externalModal").classList.add("show");
+    //             document.getElementById("externalModal").style.display = "block";
 
+    //             var itemId = button.dataset.id;
 
-
-
-    //Ajax
-    // $(document).ready(function () {
-    //     $('.openEditModal').on('click', function (e) {
-    //         e.preventDefault();
-    //         $('#externalModal').modal('show'); 
-
-    //         var itemId = $(this).data('id');
-
-    //         $.ajax({
-    //             url: '/EmployeeLists/Edit/' + itemId,
-    //             type: 'GET',
-    //             success: function (data) {
-    //                 $('#modalContentPlaceholder').html(data);
-    //             }
+    //             var request = new XMLHttpRequest();
+    //             request.onreadystatechange = function () {
+    //                 if (request.readyState === 4 && request.status === 200) {
+    //                     document.getElementById("modalContentPlaceholder").innerHTML = request.responseText;
+    //                 }
+    //             };
+    //             request.open("GET", "/EmployeeLists/Edit/" + itemId, true);
+    //             request.send();
     //         });
     //     });
 
-    //     // 追加モーダルを表示するボタンがクリックされた場合
-    //     $('#openCreateModal').on('click', function (e) {
-    //         e.preventDefault();
-    //         $('#externalModal').modal('show');
+    //     document.getElementById("openCreateModal").addEventListener("click", function (event) {
+    //         event.preventDefault();
+    //         document.getElementById("externalModal").classList.add("show");
+    //         document.getElementById("externalModal").style.display = "block";
 
-    //         $.ajax({
-    //             url: '/EmployeeLists/Create',
-    //             type: 'GET',
-    //             success: function (data) {
-    //                 $('#modalContentPlaceholder').html(data);
+    //         var request = new XMLHttpRequest();
+    //         request.onreadystatechange = function () {
+    //             if (request.readyState === 4 && request.status === 200) {
+    //                 document.getElementById("modalContentPlaceholder").innerHTML = request.responseText;
+    //             }
+    //         };
+    //         request.open("GET", "/EmployeeLists/Create", true);
+    //         request.send();
+    //     });
+
+    //     document.querySelectorAll(".modal").forEach(function (modal) {
+    //         modal.addEventListener("click", function (event) {
+    //             if (event.target === modal) {
+    //                 modal.classList.remove("show");
+    //                 modal.style.display = "none";
     //             }
     //         });
-    //     });
-    //     $('.modal').on('click', function (e) {
-    //         if (e.target !== this) return; 
-    //         $('#externalModal').modal('hide');
     //     });
     // });
-
 </script>
