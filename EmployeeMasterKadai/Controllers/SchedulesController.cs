@@ -51,7 +51,7 @@ namespace EmployeeMasterKadai.Controllers
                 JoinPeople = employeeNames
             };
 
-            return View(model);
+            return PartialView(model);
         }
 
         // POST: Schedules/Create
@@ -73,7 +73,7 @@ namespace EmployeeMasterKadai.Controllers
             }
            
           
-            return View(schedule);
+            return PartialView(schedule);
         }
 
         // GET: Schedules/Edit/5
