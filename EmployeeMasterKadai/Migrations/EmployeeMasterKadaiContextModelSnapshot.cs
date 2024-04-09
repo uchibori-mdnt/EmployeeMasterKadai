@@ -22,7 +22,7 @@ namespace EmployeeMasterKadai.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EmployeeMasterKadai.Models.EmployeeList", b =>
+            modelBuilder.Entity("EmployeeMasterKadai.Models.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace EmployeeMasterKadai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmployeeList");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("EmployeeMasterKadai.Models.Schedule", b =>
@@ -92,7 +92,7 @@ namespace EmployeeMasterKadai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schedule");
+                    b.ToTable("Schedules");
                 });
 #pragma warning restore 612, 618
         }

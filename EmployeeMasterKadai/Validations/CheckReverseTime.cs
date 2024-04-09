@@ -11,7 +11,8 @@ namespace EmployeeMasterKadai.Validations
 
             if (schedule != null && (schedule.StartDay > schedule.EndDay) && schedule.AllDay == false)
             {
-                return new ValidationResult("開始時刻が終了時刻を超えることはできません。");
+             
+                return new ValidationResult(FormatErrorMessage(""));
             }
 
             return ValidationResult.Success;

@@ -14,7 +14,7 @@ namespace EmployeeMasterKadai.Data
         {
         }
 
-        public DbSet<EmployeeMasterKadai.Models.EmployeeList> EmployeeList { get; set; } = default!;
-        public DbSet<EmployeeMasterKadai.Models.Schedule> Schedule { get; set; } = default!;
+        public DbSet<EmployeeMasterKadai.Models.Employee> Employees { get; set; } = default!;
+        public DbSet<EmployeeMasterKadai.Models.Schedule> Schedules { get; set; } = default!;
     }
 }

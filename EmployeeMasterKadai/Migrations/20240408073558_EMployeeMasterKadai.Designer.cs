@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeMasterKadai.Migrations
 {
     [DbContext(typeof(EmployeeMasterKadaiContext))]
-    [Migration("20240403062236_ScheduleCreate")]
-    partial class ScheduleCreate
+    [Migration("20240408073558_EMployeeMasterKadai")]
+    partial class EMployeeMasterKadai
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace EmployeeMasterKadai.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EmployeeMasterKadai.Models.EmployeeList", b =>
+            modelBuilder.Entity("EmployeeMasterKadai.Models.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace EmployeeMasterKadai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmployeeList");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("EmployeeMasterKadai.Models.Schedule", b =>
@@ -66,20 +66,21 @@ namespace EmployeeMasterKadai.Migrations
                     b.Property<bool>("AllDay")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("EndDay")
+                    b.Property<DateTime?>("EndDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("JoinPeople")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Organizer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDay")
+                    b.Property<DateTime?>("StartDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
@@ -89,12 +90,12 @@ namespace EmployeeMasterKadai.Migrations
                     b.Property<string>("TypeToDo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schedule");
+                    b.ToTable("Schedules");
                 });
 #pragma warning restore 612, 618
         }

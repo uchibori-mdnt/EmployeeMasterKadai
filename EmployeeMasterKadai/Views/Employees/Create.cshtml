@@ -1,0 +1,70 @@
+﻿@model EmployeeMasterKadai.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>社員の登録</h3>
+
+<hr />
+<div>
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Department" class="control-label"></label>
+            <select asp-for="Department" class="form-control">
+                <option value="">選択してください</option>
+                <option value="DCG">DCG</option>
+                <option value="カイゼン">カイゼン</option>
+                <option value="BTG">BTG</option>
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input id="retirementFlag" class="form-check-input" asp-for="RetirementFlag" /> 
+                @Html.DisplayNameFor(model => model.RetirementFlag)
+            </label>
+        </div>
+        <div id="stylInputDay" >
+            <div class="form-group" id="retirementDayInput">
+                <label asp-for="RetirementDay" class="control-label"></label>
+                <input asp-for="RetirementDay" class="form-control" type="date" disabled />
+                <span asp-validation-for="RetirementDay" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedAt" class="control-label"></label>
+            @{
+                var formattedCreatedAt = DateTime.Now.ToString("yyyy年MM月dd日 hh:mm");
+            }
+            @formattedCreatedAt
+                   
+        </div>
+            
+        <div class="form-group">
+            <label asp-for="UpdatedAt" class="control-label"></label>
+            @{
+                var formattedUpdatedAt = DateTime.Now.ToString("yyyy年MM月dd日 hh:mm");
+            }
+            @formattedUpdatedAt
+        </div>
+
+        <div class="d-flex justify-content-end pb-4">
+            <div class="p-2">
+                <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
+            </div>
+            <div class="p-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+
+

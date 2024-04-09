@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeMasterKadai.Controllers
 {
-    public class EmployeeListsController : Controller
+    public class EmployeesController : Controller
     {
         private readonly EmployeeMasterKadaiContext _context;
 
-        public EmployeeListsController(EmployeeMasterKadaiContext context)
+        public EmployeesController(EmployeeMasterKadaiContext context)
         {
             _context = context;
         }
@@ -17,7 +17,7 @@ namespace EmployeeMasterKadai.Controllers
         // GET: EmployeeLists
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EmployeeList.ToListAsync());
+            return View(await _context.Employees.ToListAsync());
         }
 
         // GET: EmployeeLists/Details/5
@@ -28,7 +28,7 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var employeeList = await _context.EmployeeList
+            var employeeList = await _context.Employees
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employeeList == null)
             {
@@ -41,7 +41,7 @@ namespace EmployeeMasterKadai.Controllers
         // GET: EmployeeLists/Create
         public IActionResult Create()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: EmployeeLists/Create
@@ -49,7 +49,7 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] EmployeeList employeeList)
+        public async Task<IActionResult> Create([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace EmployeeMasterKadai.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeList);
+            return PartialView(employeeList);
         }
 
         // GET: EmployeeLists/Edit/5
@@ -71,12 +71,12 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var employeeList = await _context.EmployeeList.FindAsync(id);
+            var employeeList = await _context.Employees.FindAsync(id);
             if (employeeList == null)
             {
                 return NotFound();
             }
-            return View(employeeList);
+            return PartialView(employeeList);
         }
 
         // POST: EmployeeLists/Edit/5
@@ -84,10 +84,10 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt")] EmployeeList employeeList)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt")] Employee employeeList)
         {
 
-            var existingRecord = await _context.EmployeeList.FirstOrDefaultAsync(e => e.Id == id);
+            var existingRecord = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
 
             if (id != existingRecord.Id)
             {
@@ -119,7 +119,7 @@ namespace EmployeeMasterKadai.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeList);
+            return PartialView(employeeList);
         }
 
         // GET: EmployeeLists/Delete/5
@@ -130,7 +130,7 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var employeeList = await _context.EmployeeList
+            var employeeList = await _context.Employees
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employeeList == null)
             {
@@ -145,10 +145,10 @@ namespace EmployeeMasterKadai.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var employeeList = await _context.EmployeeList.FindAsync(id);
+            var employeeList = await _context.Employees.FindAsync(id);
             if (employeeList != null)
             {
-                _context.EmployeeList.Remove(employeeList);
+                _context.Employees.Remove(employeeList);
             }
 
             await _context.SaveChangesAsync();
@@ -157,7 +157,7 @@ namespace EmployeeMasterKadai.Controllers
 
         private bool EmployeeListExists(Guid id)
         {
-            return _context.EmployeeList.Any(e => e.Id == id);
+            return _context.Employees.Any(e => e.Id == id);
         }
     }
 }

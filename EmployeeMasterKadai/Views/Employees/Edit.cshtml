@@ -1,0 +1,76 @@
+﻿@model EmployeeMasterKadai.Models.Employee
+
+@{
+
+    ViewData["Title"] = "Edit";
+}
+
+<h3>社員の編集</h3>
+
+
+<div>
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Department" class="control-label"></label>
+            <select asp-for="Department" class="form-control">
+                <option value="">選択してください</option>
+                <option value="DCG">DCG</option>
+                <option value="カイゼン">カイゼン</option>
+                <option value="BTG">BTG</option>
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input id="retirementFlag" class="form-check-input" asp-for="RetirementFlag" /> 
+                @Html.DisplayNameFor(model => model.RetirementFlag)
+            </label>
+        </div>
+        <div id="stylInputDay">
+            <div class="form-group" id="retirementDayInput">
+                <label asp-for="RetirementDay" class="control-label"></label>
+                <input asp-for="RetirementDay" class="form-control" type="date"  />
+                <span asp-validation-for="RetirementDay" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedAt" class="control-label"></label>
+            @{
+                var formattedCreatedAt = Model.CreatedAt.ToString("yyyy年MM月dd日 hh:mm");
+            }
+            @formattedCreatedAt
+            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UpdatedAt" class="control-label"></label>
+            @{
+                var formattedUpdatedAt = Model.UpdatedAt.ToString("yyyy年MM月dd日 hh:mm");
+            }
+            @formattedUpdatedAt
+            <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+        </div>
+        <div class="d-flex flex-row-reverse">
+            <div class="p-2">
+                <input type="submit" value="保存" class="btn btn-primary" />
+            </div>
+            <div class="p-2">
+                <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

@@ -19,7 +19,7 @@ namespace EmployeeMasterKadai.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Schedule.ToListAsync());
+            return View(await _context.Schedules.ToListAsync());
         }
 
         // GET: Schedules/Details/5
@@ -30,7 +30,7 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule
+            var schedule = await _context.Schedules
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (schedule == null)
             {
@@ -44,7 +44,7 @@ namespace EmployeeMasterKadai.Controllers
         public IActionResult Create()
         {
 
-            var employeeNames = _context.EmployeeList.Select(e => e.Name).ToArray();
+            var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
             var model = new Schedule
             {
                 // JoinPeople プロパティに社員名のリストを設定する
@@ -84,16 +84,16 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null)
             {
                 return NotFound();
             }
 
-            var employeeNames = _context.EmployeeList.Select(e => e.Name).ToArray();
+            var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
             schedule.JoinPeople = employeeNames;
 
-            return View(schedule);
+            return PartialView(schedule);
         }
 
         // POST: Schedules/Edit/5
@@ -104,7 +104,7 @@ namespace EmployeeMasterKadai.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople,CreateAt")] Schedule schedule)
         {
 
-            var foundScheduleData = await _context.Schedule.FirstOrDefaultAsync(e => e.Id == id);
+            var foundScheduleData = await _context.Schedules.FirstOrDefaultAsync(e => e.Id == id);
 
             if (ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace EmployeeMasterKadai.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(schedule);
+            return PartialView(schedule);
         }
 
         // GET: Schedules/Delete/5
@@ -146,7 +146,7 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedule
+            var schedule = await _context.Schedules
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (schedule == null)
             {
@@ -161,10 +161,10 @@ namespace EmployeeMasterKadai.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedules.FindAsync(id);
             if (schedule != null)
             {
-                _context.Schedule.Remove(schedule);
+                _context.Schedules.Remove(schedule);
             }
 
             await _context.SaveChangesAsync();
@@ -173,7 +173,7 @@ namespace EmployeeMasterKadai.Controllers
 
         private bool ScheduleExists(Guid id)
         {
-            return _context.Schedule.Any(e => e.Id == id);
+            return _context.Schedules.Any(e => e.Id == id);
         }
     }
 }

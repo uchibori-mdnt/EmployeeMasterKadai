@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace EmployeeMasterKadai.Models
 {
-    public class EmployeeList
+    public class Employee/*:IValidatableObject*/
     {
         [Key]
         [ScaffoldColumn(false)]
@@ -28,5 +28,10 @@ namespace EmployeeMasterKadai.Models
         [DisplayName("更新日時")]
         [DataType(DataType.DateTime)]
         public DateTime UpdatedAt { get; set; }
+
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    //yield return new ValidationResult("err",new string[] { "RetirementDay" });
+        //}
     }
 }

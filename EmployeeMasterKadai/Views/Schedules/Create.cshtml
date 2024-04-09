@@ -8,81 +8,80 @@
 
 <h3>スケジュールの登録</h3>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+<div>
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Organizer" class="control-label"></label>
+            <div>
+                @Html.DropDownListFor(model => model.Organizer, new SelectList(Model.JoinPeople), "選択してください", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <label asp-for="Organizer" class="control-label"></label>
-                <div>
-                    @Html.DropDownListFor(model => model.Organizer, new SelectList(Model.JoinPeople), "選択してください", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="TypeToDo" class="control-label"></label>
-                <select asp-for="TypeToDo" class="form-control">
-                    <option value="">指定しない</option>
-                    <option value="営業">営業</option>
-                    <option value="会議">会議</option>
-                    <option value="開発">開発</option>
-                    <option value="休日">休日</option>
-                </select>
-                <span asp-validation-for="TypeToDo" class="text-danger"></span>
+        <div class="form-group">
+            <label asp-for="TypeToDo" class="control-label"></label>
+            <select asp-for="TypeToDo" class="form-control">
+                <option value="">指定しない</option>
+                <option value="営業">営業</option>
+                <option value="会議">会議</option>
+                <option value="開発">開発</option>
+                <option value="休日">休日</option>
+            </select>
+            <span asp-validation-for="TypeToDo" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" onchange="checkAllDay(this)" />
+                @Html.DisplayNameFor(model => model.AllDay)
+            </label>
+        </div>
+        <div id="dateTimeInputs">
+            <div class="form-group" id="startDay">
+                <label asp-for="StartDay" class="control-label"></label>
+                <input asp-for="StartDay" class="form-control" />
+                <span asp-validation-for="StartDay" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" onchange="checkAllDay(this)" />
-                    @Html.DisplayNameFor(model => model.AllDay)
-                </label>
+            <div class="form-group" id="endDay">
+                <label asp-for="EndDay" class="control-label"></label>
+                <input asp-for="EndDay" class="form-control" />
+                <span asp-validation-for="EndDay" class="text-danger"></span>
             </div>
-            <div id="dateTimeInputs">
-                <div class="form-group" id="startDay">
-                    <label asp-for="StartDay" class="control-label"></label>
-                    <input asp-for="StartDay" class="form-control" />
-                    <span asp-validation-for="StartDay" class="text-danger"></span>
-                </div>
-                <div class="form-group" id="endDay">
-                    <label asp-for="EndDay" class="control-label"></label>
-                    <input asp-for="EndDay" class="form-control" />
-                    <span asp-validation-for="EndDay" class="text-danger"></span>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="JoinPeople" class="control-label">参加者：</label>
-               <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
-
-                    @foreach (var name in Model.JoinPeople)
-                    {
-                        <div class="form-check ml-2">
-                            <input type="checkbox" id="@name" name="JoinPeople" value="@name" class="form-check-input" />
-                            <label class="form-check-label" for="@name">@name</label>
-                        </div>
-                    }
-                </div>
-                <span asp-validation-for="JoinPeople" class="text-danger"></span>
-            </div>
+        </div>
 
 
-            <div class="d-flex pb-4">
-                <div class="p-2">
-                    <input type="submit" value="登録" class="btn btn-primary" />
-                </div>
-                <div class="p-2">
-                    <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
-                </div>
+        <div class="form-group">
+            <label asp-for="JoinPeople" class="control-label">参加者：</label>
+            <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
+
+                @foreach (var name in Model.JoinPeople)
+                {
+                    <div class="form-check ml-2">
+                        <input type="checkbox" id="@name" name="JoinPeople" value="@name" class="form-check-input" />
+                        <label class="form-check-label" for="@name">@name</label>
+                    </div>
+                }
             </div>
-        </form>
-    </div>
+            <span asp-validation-for="JoinPeople" class="text-danger"></span>
+        </div>
+
+
+        <div class="d-flex justify-content-end pb-4">
+            <div class="p-2">
+                <input type="submit" value="登録" class="btn btn-primary" />
+            </div>
+            <div class="p-2">
+                <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
+            </div>
+        </div>
+    </form>
 </div>
+
 
 
 @section Scripts {
