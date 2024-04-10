@@ -30,8 +30,7 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-            var schedule = await _context.Schedules
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var schedule = await _context.Schedules.FirstOrDefaultAsync(m => m.Id == id);
             if (schedule == null)
             {
                 return NotFound();
@@ -43,7 +42,6 @@ namespace EmployeeMasterKadai.Controllers
         // GET: Schedules/Create
         public IActionResult Create()
         {
-
             var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
             var model = new Schedule
             {
@@ -71,9 +69,17 @@ namespace EmployeeMasterKadai.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-           
-          
-            return PartialView(schedule);
+            else
+            {
+                var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
+                var model = new Schedule
+                {
+                    JoinPeople = employeeNames
+                };
+                return PartialView(model);
+            }
+
+
         }
 
         // GET: Schedules/Edit/5
@@ -121,6 +127,7 @@ namespace EmployeeMasterKadai.Controllers
 
                     // 変更を保存
                     await _context.SaveChangesAsync();
+                    return Json(new { success = true });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -133,9 +140,17 @@ namespace EmployeeMasterKadai.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
-            return PartialView(schedule);
+            else
+            {
+                var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
+                var model = new Schedule
+                {
+                    JoinPeople = employeeNames
+                };
+                return PartialView(model);
+            }
         }
 
         // GET: Schedules/Delete/5

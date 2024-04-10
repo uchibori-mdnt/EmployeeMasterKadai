@@ -5,7 +5,6 @@
     ViewData["Title"] = "Index";
 }
 
-
 <!-- 追加モーダルを表示するボタン -->
 <button type="button" class="btn btn-primary mb-3" id="createModal">
     追加<i class="bi bi-person-add"></i>
@@ -102,6 +101,11 @@
 </div>
 
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
 <script>
     $(document).ready(function () {
         // 編集モーダルを表示するボタンがクリックされた場合
@@ -116,6 +120,7 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
+                    initForm();
                 }
             });
         });
@@ -130,13 +135,57 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
-
+                    initForm();
                 }
             });
         });
-        $('.modal').on('click', function (e) {
-            if (e.target !== this) return;
-            $('#externalModal').modal('hide')
-        });
+
+
+        function checkAllDay(check) {
+            var allDayChecked = $(check).prop('checked');
+            var dateTimeInputs = $('#dateTimeInputs');
+
+            if (allDayChecked) {
+                $('#startDay input[type="datetime-local"]').prop('disabled', true);
+                $('#endDay input[type="datetime-local"]').prop('disabled', true);
+                dateTimeInputs.css('color', '#999999');
+            } else {
+                $('#startDay input[type="datetime-local"]').prop('disabled', false);
+                $('#endDay input[type="datetime-local"]').prop('disabled', false);
+                dateTimeInputs.css('color', '#000000');
+            }
+        }
+
+        // フォームの初期化関数
+        var initForm = () => {
+            const $form = $('#modalContentPlaceholder').find('form');
+
+            // 入力コントロールが読み込まれてから入力チェック機能を有効にする
+            $.validator.unobtrusive.parse($form);
+
+            $form.on('submit', function (e) {
+                e.preventDefault();
+
+                if (!$form.valid()) {
+                    return false;
+                }
+
+                // Ajaxでpost
+                $.ajax({
+                    type: 'post',
+                    url: $form.attr('action'), // 送信先URL
+                    data: $form.serialize(), // フォームデータ
+                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                }).done((data) => {
+                    if (data.success) {
+                        $('#externalModal').modal('hide'); // モーダルを閉じる
+                        location.reload();
+                    } else {
+                        $('#modalContentPlaceholder').html(data);
+                    }
+                });
+            });
+        };
     });
 </script>
+}

@@ -122,11 +122,10 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
+                        initForm();
                     }
                 });
             });
-
-
 
             function checkFlag(retirementFlag) {
                 var retirementFlagString = retirementFlag.toString();
@@ -198,7 +197,10 @@
                             location.reload();
                         } else {
                             $('#modalContentPlaceholder').html(data);
-                            initForm(); // フォームの再初期化
+                             checkFlag(retirementFlag);
+                            $('#retirementFlag').on('change', function () {
+                                checkRetirement(this);
+                            });
                         }
                     });
 
