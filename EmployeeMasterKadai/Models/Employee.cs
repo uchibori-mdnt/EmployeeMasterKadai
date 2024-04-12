@@ -21,6 +21,7 @@ namespace EmployeeMasterKadai.Models
         [DisplayName("退職日")]
         [DataType(DataType.DateTime)]
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
+        [IfTimesNull(ErrorMessage = "退職日を入力してください。")]
         public DateTime? RetirementDay { get; set; }
         [DisplayName("登録日時")]
         [DataType(DataType.DateTime)]
@@ -29,9 +30,5 @@ namespace EmployeeMasterKadai.Models
         [DataType(DataType.DateTime)]
         public DateTime UpdatedAt { get; set; }
 
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    //yield return new ValidationResult("err",new string[] { "RetirementDay" });
-        //}
     }
 }
