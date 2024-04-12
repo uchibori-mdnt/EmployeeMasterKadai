@@ -37,19 +37,19 @@
         </div>
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" onchange="checkAllDay(this)" />
+                <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" />
                 @Html.DisplayNameFor(model => model.AllDay)
             </label>
         </div>
         <div id="dateTimeInputs">
             <div class="form-group" id="startDay">
                 <label asp-for="StartDay" class="control-label"></label>
-                <input asp-for="StartDay" class="form-control" />
+                <input asp-for="StartDay" class="form-control" type="datetime-local" />
                 <span asp-validation-for="StartDay" class="text-danger"></span>
             </div>
             <div class="form-group" id="endDay">
                 <label asp-for="EndDay" class="control-label"></label>
-                <input asp-for="EndDay" class="form-control" />
+                <input asp-for="EndDay" class="form-control" type="datetime-local" />
                 <span asp-validation-for="EndDay" class="text-danger"></span>
             </div>
         </div>

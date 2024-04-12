@@ -122,7 +122,7 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm();
+                        initForm(retirementFlag);
                     }
                 });
             });
@@ -154,7 +154,7 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm(); // フォームの初期化
+                        initForm(retirementFlag); // フォームの初期化
                     }
                 });
             });
@@ -173,7 +173,7 @@
             }
 
             // フォームの初期化関数
-            var initForm = () => {
+            var initForm = (retirementFlag) => {
                 const $form = $('#modalContentPlaceholder').find('form');
 
                 // 入力コントロールが読み込まれてから入力チェック機能を有効にする
@@ -193,14 +193,21 @@
                         data: $form.serialize(), // フォームデータ
                         contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                     }).done((data) => {
+
                         if (data.success) {
+                            console.log("成功している")
+                            $('#externalModal').modal('hide');
                             location.reload();
+
                         } else {
+                            console.log("elseだね")
+
                             $('#modalContentPlaceholder').html(data);
                              checkFlag(retirementFlag);
                             $('#retirementFlag').on('change', function () {
                                 checkRetirement(this);
                             });
+                            initForm();
                         }
                     });
 

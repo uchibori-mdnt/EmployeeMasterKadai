@@ -58,7 +58,7 @@
                     if (item.StartDay != null)
                     {
                         var formattedStartDatDate = startDayFormat.Format(item.StartDay.Value, "yyyy年MM月dd日 hh:mm");
-                        @formattedStartDatDate
+                                    @formattedStartDatDate
                     }
                 }
             </td>
@@ -68,7 +68,7 @@
                     if (item.EndDay != null)
                     {
                         var formattedEndDayDate = endDayFormat.Format(item.EndDay.Value, "yyyy年MM月dd日 hh:mm");
-                        @formattedEndDayDate
+                                    @formattedEndDayDate
                     }
                 }
             </td>
@@ -79,7 +79,7 @@
                 }
             </td>
             <td>
-                    <button type="button" class="btn btn-primary editModal" data-id="@item.Id">
+                    <button type="button" class="btn btn-primary editModal" data-id="@item.Id" data-all="@item.AllDay">
                         編集<i class="bi bi-person-add"></i>
                     </button>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">削除</a>
@@ -108,22 +108,47 @@
 
 <script>
     $(document).ready(function () {
+
         // 編集モーダルを表示するボタンがクリックされた場合
         $('.editModal').on('click', function (e) {
             e.preventDefault();
             $('#externalModal').modal('show');
 
+
+            //編集画面で終日にチェックが入っていたらグレーアウトさせたい、表示非表示設定したい
             var itemId = $(this).data('id');
+            var all = $(this).data('all');
 
             $.ajax({
                 url: '/Schedules/Edit/' + itemId,
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
+                        checkFlag(all);
+
+                    $('#AllDay').on('change', function () {
+                        checkAllDay(this);
+                    });
                     initForm();
                 }
             });
         });
+
+        function checkFlag(allDay) {
+            var allDayFlagString = allDay.toString();
+            var dateTimeInputs = $('#dateTimeInputs');
+
+            if (allDayFlagString === "False") {
+                    $('#startDay input[type="datetime-local"]').prop('disabled', false);
+                    $('#endDay input[type="datetime-local"]').prop('disabled', false);
+                    dateTimeInputs.css('color', '#000000');
+            } else {
+                    $('#startDay input[type="datetime-local"]').prop('disabled', true);
+                    $('#endDay input[type="datetime-local"]').prop('disabled', true);
+                    dateTimeInputs.css('color', '#999999');
+            }
+        }
+
 
         // 追加モーダルを表示するボタンがクリックされた場合
         $('#createModal').on('click', function (e) {
@@ -135,21 +160,29 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
+                    $('#AllDay').on('change', function () {
+                        checkAllDay(this);
+                    });
                     initForm();
                 }
             });
         });
 
 
+
+
         function checkAllDay(check) {
             var allDayChecked = $(check).prop('checked');
             var dateTimeInputs = $('#dateTimeInputs');
 
+                console.log("このメソッドはできているよ")
             if (allDayChecked) {
+                    console.log("Trueだね")
                 $('#startDay input[type="datetime-local"]').prop('disabled', true);
                 $('#endDay input[type="datetime-local"]').prop('disabled', true);
                 dateTimeInputs.css('color', '#999999');
             } else {
+                    console.log("Falseだね")
                 $('#startDay input[type="datetime-local"]').prop('disabled', false);
                 $('#endDay input[type="datetime-local"]').prop('disabled', false);
                 dateTimeInputs.css('color', '#000000');
@@ -178,10 +211,14 @@
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                 }).done((data) => {
                     if (data.success) {
-                        $('#externalModal').modal('hide'); // モーダルを閉じる
+                       $('#externalModal').modal('hide'); // モーダルを閉じる
                         location.reload();
                     } else {
                         $('#modalContentPlaceholder').html(data);
+                            checkFlag(allDay);
+                            $('#AllDay').on('change', function () {
+                                checkAllDay(this);
+                            });
                     }
                 });
             });

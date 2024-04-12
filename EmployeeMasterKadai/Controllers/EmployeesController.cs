@@ -1,4 +1,4 @@
-﻿using EmployeeMasterKadai.Data;
+﻿﻿using EmployeeMasterKadai.Data;
 using EmployeeMasterKadai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +58,9 @@ namespace EmployeeMasterKadai.Controllers
                 employeeList.Id = Guid.NewGuid();
                 _context.Add(employeeList);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true });
             }
+
             return PartialView(employeeList);
         }
 
@@ -117,7 +118,7 @@ namespace EmployeeMasterKadai.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true });
             }
             return PartialView(employeeList);
         }

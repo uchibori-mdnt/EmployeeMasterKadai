@@ -39,7 +39,7 @@ namespace EmployeeMasterKadai.Migrations
                     AllDay = table.Column<bool>(type: "bit", nullable: false),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDay = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    JoinPeople = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JoinPeople = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

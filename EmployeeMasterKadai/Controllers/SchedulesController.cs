@@ -67,7 +67,8 @@ namespace EmployeeMasterKadai.Controllers
                 schedule.Id = Guid.NewGuid();
                 _context.Add(schedule);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return Json(new { success = true });
             }
             else
             {
@@ -127,7 +128,6 @@ namespace EmployeeMasterKadai.Controllers
 
                     // 変更を保存
                     await _context.SaveChangesAsync();
-                    return Json(new { success = true });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,7 +140,7 @@ namespace EmployeeMasterKadai.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true });
             }
             else
             {
