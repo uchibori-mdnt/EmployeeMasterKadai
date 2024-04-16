@@ -5,9 +5,6 @@
     ViewData["Title"] = "Create";
 }
 
-
-<h3>スケジュールの登録</h3>
-
 <div>
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -71,41 +68,14 @@
         </div>
 
 
-        <div class="d-flex justify-content-end pb-4">
-            <div class="p-2">
-                <input type="submit" value="登録" class="btn btn-primary" />
-            </div>
+        <div class="d-flex justify-content-end pb-4" id="modalFooter">
             <div class="p-2">
                 <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
+            </div>
+            <div class="p-2">
+                <input type="submit" value="登録" class="btn btn-primary" />
             </div>
         </div>
     </form>
 </div>
 
-@* 
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script>
-        $(document).ready(function () {
-            $('#joinPeople').multiselect();
-        });
-
-        function checkAllDay(check) {
-            var allDayChecked = $(check).prop('checked');
-            var dateTimeInputs = $('#dateTimeInputs');
-
-            if (allDayChecked) {
-                $('#startDay input[type="datetime-local"]').prop('disabled', true);
-                $('#endDay input[type="datetime-local"]').prop('disabled', true);
-                dateTimeInputs.css('color', '#999999');
-            } else {
-                $('#startDay input[type="datetime-local"]').prop('disabled', false);
-                $('#endDay input[type="datetime-local"]').prop('disabled', false);
-                dateTimeInputs.css('color', '#000000');
-            }
-        }
-
-    </script>
-} *@

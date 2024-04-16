@@ -4,9 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h3>社員の登録</h3>
 
-<hr />
 <div>
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -56,7 +54,7 @@
             @formattedUpdatedAt
         </div>
 
-        <div class="d-flex justify-content-end pb-4">
+        <div class="d-flex justify-content-end pb-4" id="modalFooter">
             <div class="p-2">
                 <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
             </div>

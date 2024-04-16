@@ -67,7 +67,6 @@ namespace EmployeeMasterKadai.Controllers
                 schedule.Id = Guid.NewGuid();
                 _context.Add(schedule);
                 await _context.SaveChangesAsync();
-
                 return Json(new { success = true });
             }
             else
@@ -79,8 +78,6 @@ namespace EmployeeMasterKadai.Controllers
                 };
                 return PartialView(model);
             }
-
-
         }
 
         // GET: Schedules/Edit/5
@@ -126,7 +123,6 @@ namespace EmployeeMasterKadai.Controllers
                     foundScheduleData.JoinPeople = schedule.JoinPeople;
                     foundScheduleData.UpdatedDate = DateTime.Now;
 
-                    // 変更を保存
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -149,8 +145,9 @@ namespace EmployeeMasterKadai.Controllers
                 {
                     JoinPeople = employeeNames
                 };
-                return PartialView(model);
+                return Json(new { success = true });
             }
+                return PartialView(schedule);
         }
 
         // GET: Schedules/Delete/5

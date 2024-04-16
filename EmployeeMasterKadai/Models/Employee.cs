@@ -22,12 +22,15 @@ namespace EmployeeMasterKadai.Models
         [DataType(DataType.DateTime)]
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
         [IfTimesNull(ErrorMessage = "退職日を入力してください。")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? RetirementDay { get; set; }
         [DisplayName("登録日時")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime CreatedAt { get; set; }
         [DisplayName("更新日時")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime UpdatedAt { get; set; }
 
     }

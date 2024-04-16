@@ -53,25 +53,12 @@
                 @Html.DisplayFor(modelItem => item.AllDay)
             </td>
             <td>
-                @{
-                    var startDayFormat = new DateFormat(); 
-                    if (item.StartDay != null)
-                    {
-                        var formattedStartDatDate = startDayFormat.Format(item.StartDay.Value, "yyyy年MM月dd日 hh:mm");
-                                    @formattedStartDatDate
-                    }
-                }
+                @Html.DisplayFor(modelItem => item.StartDay)
             </td>
             <td>
-                @{
-                    var endDayFormat = new DateFormat();
-                    if (item.EndDay != null)
-                    {
-                        var formattedEndDayDate = endDayFormat.Format(item.EndDay.Value, "yyyy年MM月dd日 hh:mm");
-                                    @formattedEndDayDate
-                    }
-                }
+                @Html.DisplayFor(modelItem => item.EndDay)
             </td>
+        
             <td>
                 @foreach (var person in item.JoinPeople)
                 {
@@ -95,7 +82,26 @@
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body" id="modalContentPlaceholder"></div>
+            <div class="modal-body" id="modalContentPlaceholder" ></div>
+        </div>
+    </div>
+</div>
+
+
+<!--エラーのモーダルウィンドウ-->
+<div class="modal" id="errorModalSchedule" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #FFC7AF">
+            <div class="modal-header">
+                <h5 class="modal-title">エラー</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>登録できませんでした。画面を確認してください。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">閉じる</button>
+            </div>
         </div>
     </div>
 </div>
@@ -107,6 +113,18 @@
     }
 
 <script>
+        // 日付を適切な形式にフォーマットする関数
+        function formatDate(date) {
+            var formattedDate = new Date(date);
+            var year = formattedDate.getFullYear();
+            var month = ("0" + (formattedDate.getMonth() + 1)).slice(-2);
+            var day = ("0" + formattedDate.getDate()).slice(-2);
+            var hours = ("0" + formattedDate.getHours()).slice(-2);
+            var minutes = ("0" + formattedDate.getMinutes()).slice(-2);
+            var formattedDateTime = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
+            return formattedDateTime;
+        }
+
     $(document).ready(function () {
 
         // 編集モーダルを表示するボタンがクリックされた場合
@@ -115,7 +133,6 @@
             $('#externalModal').modal('show');
 
 
-            //編集画面で終日にチェックが入っていたらグレーアウトさせたい、表示非表示設定したい
             var itemId = $(this).data('id');
             var all = $(this).data('all');
 
@@ -169,20 +186,15 @@
         });
 
 
-
-
         function checkAllDay(check) {
             var allDayChecked = $(check).prop('checked');
             var dateTimeInputs = $('#dateTimeInputs');
 
-                console.log("このメソッドはできているよ")
             if (allDayChecked) {
-                    console.log("Trueだね")
                 $('#startDay input[type="datetime-local"]').prop('disabled', true);
                 $('#endDay input[type="datetime-local"]').prop('disabled', true);
                 dateTimeInputs.css('color', '#999999');
             } else {
-                    console.log("Falseだね")
                 $('#startDay input[type="datetime-local"]').prop('disabled', false);
                 $('#endDay input[type="datetime-local"]').prop('disabled', false);
                 dateTimeInputs.css('color', '#000000');
@@ -210,19 +222,28 @@
                     data: $form.serialize(), // フォームデータ
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                 }).done((data) => {
+
                     if (data.success) {
                        $('#externalModal').modal('hide'); // モーダルを閉じる
-                        location.reload();
-                    } else {
+                       location.reload();
+                    } 
+                    else {
+                        $('#errorModalSchedule').modal('show');
+
                         $('#modalContentPlaceholder').html(data);
-                            checkFlag(allDay);
-                            $('#AllDay').on('change', function () {
-                                checkAllDay(this);
-                            });
+                        checkFlag(allDay);
+                        $('#AllDay').on('change', function () {
+                        checkAllDay(this);
+                        });
                     }
                 });
             });
         };
+            $('#closeModalBtn').click(function () {
+                console.log("閉じるボタンが押された")
+                initForm();
+            });
     });
 </script>
 }
+
