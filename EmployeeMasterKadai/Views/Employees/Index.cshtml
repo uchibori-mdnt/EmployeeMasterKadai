@@ -85,19 +85,19 @@
     </div>
 </div>
 
-<!--エラーのモーダルウィンドウ-->
-<div class="modal" id="errorModal" tabindex="-1" role="dialog">
+<!--エラーのモーダルウィンドウ static背景クリックして閉じさせなくしたい-->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: #d5e5ed">
             <div class="modal-header">
                 <h5 class="modal-title">エラー</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>登録できませんでした。画面を確認してください。</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">閉じる</button>
             </div>
         </div>
     </div>
@@ -111,6 +111,7 @@
     }　
 
     <script>
+
  
         $(document).ready(function () {
 
@@ -131,7 +132,7 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm(retirementFlag);
+                        initForm();
                     }
                 });
             });
@@ -162,7 +163,7 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm(retirementFlag); // フォームの初期化
+                        initForm(); // フォームの初期化
                     }
                 });
             });
@@ -178,6 +179,20 @@
                     $('#retirementDayInput input[type="date"]').prop('disabled', true);
                     stylInputDay.css('color', '#999999');
                 }
+            }
+
+            function connectTOForm() {
+                $.ajax({
+                    url: '/Employees/Create',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#modalContentPlaceholder').html(data);
+                        $('#retirementFlag').on('change', function () {
+                            checkRetirement(this);
+                        });
+                        initForm(); // フォームの初期化
+                    }
+                });
             }
 
             // フォームの初期化関数
@@ -201,27 +216,29 @@
                         url: $form.attr('action'), // 送信先URL
                         data: $form.serialize(), // フォームデータ
                         contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                    }).done((data) => {
+                    }).done((data) => {              
 
                         if (data.success) {
                             $('#externalModal').modal('hide');
                             location.reload();
 
                         } else {
+                            $('#errorModal').modal('show');
 
                             $('#modalContentPlaceholder').html(data);
                              checkFlag(retirementFlag);
                             $('#retirementFlag').on('change', function () {
-                                checkRetirement(this);
-                            });
-                            initForm();
-
-                            $('#errorModal').modal('show');
+                            checkRetirement(this);
+                            });                     
                         }
                     });
 
                 });
             };
+            $('#closeModalBtn, #CloseBtn').click(function () {
+                console.log("閉じるボタンが押された")
+                connectTOForm();
+            });
         });
     </script>
 }

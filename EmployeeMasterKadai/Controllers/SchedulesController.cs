@@ -39,13 +39,27 @@ namespace EmployeeMasterKadai.Controllers
             return View(schedule);
         }
 
-        // GET: Schedules/Create
+        // GET: Schedules/Create ここにRetirementFlagがTrueのEmployeeがJoinPopleに含ませない処理を入れたい
         public IActionResult Create()
         {
-            var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
+            //var employeeNames = _context.Employees.Select(e => e.Name).ToArray();
+            //var model = new Schedule
+            //{
+            //    // JoinPeople プロパティに社員名のリストを設定する
+            //    JoinPeople = employeeNames
+            //};
+
+            //return PartialView(model);
+
+            // RetirementFlagがFalseのEmployeeのみを取得して、その名前の配列を作成します
+            var employeeNames = _context.Employees
+                .Where(e => !e.RetirementFlag)
+                .Select(e => e.Name)
+                .ToArray();
+
+            // Scheduleオブジェクトを作成し、JoinPeopleに社員名の配列を設定します
             var model = new Schedule
             {
-                // JoinPeople プロパティに社員名のリストを設定する
                 JoinPeople = employeeNames
             };
 

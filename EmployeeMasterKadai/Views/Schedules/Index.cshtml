@@ -94,7 +94,7 @@
         <div class="modal-content" style="background-color: #FFC7AF">
             <div class="modal-header">
                 <h5 class="modal-title">エラー</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>登録できませんでした。画面を確認してください。</p>
@@ -239,7 +239,7 @@
                 });
             });
         };
-            $('#closeModalBtn').click(function () {
+            $('#closeModalBtn, #CloseBtn').click(function () {
                 console.log("閉じるボタンが押された")
                 initForm();
             });

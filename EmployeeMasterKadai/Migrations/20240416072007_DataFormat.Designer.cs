@@ -4,6 +4,7 @@ using EmployeeMasterKadai.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeMasterKadai.Migrations
 {
     [DbContext(typeof(EmployeeMasterKadaiContext))]
-    partial class EmployeeMasterKadaiContextModelSnapshot : ModelSnapshot
+    [Migration("20240416072007_DataFormat")]
+    partial class DataFormat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace EmployeeMasterKadai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("EndDay")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("JoinPeople")
                         .IsRequired()
@@ -78,7 +81,7 @@ namespace EmployeeMasterKadai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartDay")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Title")
                         .IsRequired()
