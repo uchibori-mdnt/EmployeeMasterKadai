@@ -83,34 +83,33 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title fs-5" id="exampleModalHeader"></div>
+                <div class="modal-title fs-5" id="exampleModalLabel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
-            <div class="modal-footer" id="modalFooterSchedule"></div>
+            <div class="modal-footer" id="modalFooter"></div>
         </div>
     </div>
 </div>
 
 
 <!--エラーのモーダルウィンドウ-->
-<div class="modal" id="errorModalSchedule" tabindex="-1" role="dialog">
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: #FFC7AF">
+        <div class="modal-content" style="background-color: #d5e5ed">
             <div class="modal-header">
-                <h5 class="modal-title">エラー</h5>
+                <div class="modal-title fs-5" id="messageLavel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>登録できませんでした。画面を確認してください。</p>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="closeModalBtn">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">閉じる</button>
-            </div>
+
         </div>
     </div>
 </div>
 
+<script src="~/js/Common.js"></script>
 
 @section Scripts {
     @{
@@ -146,7 +145,7 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
-                    $('#exampleModalHeader').text('スケジュールの編集');
+                        $('#exampleModalLabel').text('スケジュールの編集');
                     checkFlag(all);
 
                     $('#AllDay').on('change', function () {
@@ -183,7 +182,7 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
-                    $('#exampleModalHeader').text('スケジュールの登録');
+                        $('#exampleModalLabel').text('スケジュールの登録');
 
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
@@ -210,27 +209,27 @@
         }
 
 
-            var submitButtonSchedule = '<div class="d-flex justify-content-end pb-4">' +
-                '<div class="p-2">' +
-                '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
-                '</div>' +
-                '<div class="p-2">' +
-                '<input type="submit" value="登録" class="btn btn-primary" />' +
-                '</div>' +
-                '</div>';
+            // var submitButtonSchedule = '<div class="d-flex justify-content-end pb-4">' +
+            //     '<div class="p-2">' +
+            //     '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
+            //     '</div>' +
+            //     '<div class="p-2">' +
+            //     '<input type="submit" value="登録" class="btn btn-primary" />' +
+            //     '</div>' +
+            //     '</div>';
 
-            $('#modalFooterSchedule').html(submitButtonSchedule);
+            // $('#modalFooterSchedule').html(submitButtonSchedule);
 
-            // 登録ボタンがクリックされた時の処理を追加する
-            $('#modalFooterSchedule').on('click', 'input[type="submit"]', function () {
-                var clickedValue = $(this).val();
+            // // 登録ボタンがクリックされた時の処理を追加する
+            // $('#modalFooterSchedule').on('click', 'input[type="submit"]', function () {
+            //     var clickedValue = $(this).val();
 
-                if (clickedValue === "登録") {
-                    $('form').submit();
-                } else if (clickedValue === "キャンセル") {
-                    $('#externalModal').modal('hide');
-                }
-            });
+            //     if (clickedValue === "登録") {
+            //         $('form').submit();
+            //     } else if (clickedValue === "キャンセル") {
+            //         $('#externalModal').modal('hide');
+            //     }
+            // });
 
 
 
@@ -257,18 +256,18 @@
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                 }).done((data) => {
 
-                    if (data.success) {
-                       $('#externalModal').modal('hide'); // モーダルを閉じる
-                       location.reload();
-                    } 
-                    else {
-                        $('#errorModalSchedule').modal('show');
 
-                        $('#modalContentPlaceholder').html(data);
-                        checkFlag(allDay);
-                        $('#AllDay').on('change', function () {
-                        checkAllDay(this);
-                        });
+                    if (data.success) {
+
+                            if ($form.attr('action') === '/Schedules/Create') {
+                                showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？');
+                        } else {
+                                showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？');
+                        }
+                        handleConfirmationModal(checkButtonHtml);
+
+                    } else {
+                        showErrorModal(data, retirementFlag);
                     }
                 });
             });

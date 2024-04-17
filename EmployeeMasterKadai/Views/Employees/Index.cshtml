@@ -86,22 +86,23 @@
 </div>
 
 <!--エラーのモーダルウィンドウ static背景クリックして閉じさせなくしたい-->
-<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: #d5e5ed">
             <div class="modal-header">
-                <h5 class="modal-title">エラー</h5>
+                <div class="modal-title fs-5" id="messageLavel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>登録できませんでした。画面を確認してください。</p>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="closeModalBtn">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">閉じる</button>
-            </div>
+
         </div>
     </div>
 </div>
+
+
+<script src="~/js/Common.js"></script>
 
 
 
@@ -197,32 +198,6 @@
                 });
             }
 
-            var submitButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
-                '<div class="p-2">' +
-                '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
-                '</div>' +
-                '<div class="p-2">' +
-                '<input type="submit" value="登録" class="btn btn-primary" />' +
-                '</div>' +
-                '</div>';
-
-            $('#modalFooter').html(submitButtonHtml);
-
-            // 登録ボタンがクリックされた時の処理を追加する
-            $('#modalFooter').on('click', 'input[type="submit"]', function () {
-                var clickedButtonValue = $(this).val();
-
-                if (clickedButtonValue === "登録") {
-                    $('form').submit();
-                } else if (clickedButtonValue === "キャンセル") {
-                    $('#externalModal').modal('hide');
-                }
-            });
-
-
-
-
-
 
             // フォームの初期化関数
             var initForm = (retirementFlag) => {
@@ -248,17 +223,16 @@
                     }).done((data) => {              
 
                         if (data.success) {
-                            $('#externalModal').modal('hide');
-                            location.reload();
+
+                            if ($form.attr('action') === '/Employees/Create') {
+                                showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？');
+                            } else {
+                                showConfirmationModal('/Employees/Update', '更新します。よろしいですか？');
+                            }
+                            handleConfirmationModal(checkButtonHtml);
 
                         } else {
-                            $('#errorModal').modal('show');
-
-                            $('#modalContentPlaceholder').html(data);
-                             checkFlag(retirementFlag);
-                            $('#retirementFlag').on('change', function () {
-                            checkRetirement(this);
-                            });                     
+                            showErrorModal(data, retirementFlag);               
                         }
                     });
 
