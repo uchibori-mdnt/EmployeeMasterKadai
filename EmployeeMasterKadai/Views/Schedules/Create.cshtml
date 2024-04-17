@@ -42,6 +42,22 @@
             <div class="form-group" id="startDay">
                 <label asp-for="StartDay" class="control-label"></label>
                 <input asp-for="StartDay" class="form-control" type="datetime-local" />
+
+
+    @*             <label for="time">予定の時刻：</label>
+                <input type="time"
+                       list="data-list"
+                       name="予定の時刻"
+                       min="06:00"
+                       max="07:00"
+                       step="1800" /><span></span>
+                <datalist id="data-list">
+                    <option value="06:00"></option>
+                    <option value="06:30"></option>
+                    <option value="07:00"></option>
+                </datalist> *@
+
+
                 <span asp-validation-for="StartDay" class="text-danger"></span>
             </div>
             <div class="form-group" id="endDay">
@@ -67,15 +83,6 @@
             <span asp-validation-for="JoinPeople" class="text-danger"></span>
         </div>
 
-@* 
-        <div class="d-flex justify-content-end pb-4">
-            <div class="p-2">
-                <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
-            </div>
-            <div class="p-2">
-                <input type="submit" value="登録" class="btn btn-primary" />
-            </div>
-        </div> *@
     </form>
 </div>
 

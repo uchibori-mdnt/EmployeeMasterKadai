@@ -117,17 +117,6 @@
     }
 
 <script>
-        // 日付を適切な形式にフォーマットする関数
-        function formatDate(date) {
-            var formattedDate = new Date(date);
-            var year = formattedDate.getFullYear();
-            var month = ("0" + (formattedDate.getMonth() + 1)).slice(-2);
-            var day = ("0" + formattedDate.getDate()).slice(-2);
-            var hours = ("0" + formattedDate.getHours()).slice(-2);
-            var minutes = ("0" + formattedDate.getMinutes()).slice(-2);
-            var formattedDateTime = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
-            return formattedDateTime;
-        }
 
     $(document).ready(function () {
 
@@ -209,34 +198,9 @@
         }
 
 
-            // var submitButtonSchedule = '<div class="d-flex justify-content-end pb-4">' +
-            //     '<div class="p-2">' +
-            //     '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
-            //     '</div>' +
-            //     '<div class="p-2">' +
-            //     '<input type="submit" value="登録" class="btn btn-primary" />' +
-            //     '</div>' +
-            //     '</div>';
-
-            // $('#modalFooterSchedule').html(submitButtonSchedule);
-
-            // // 登録ボタンがクリックされた時の処理を追加する
-            // $('#modalFooterSchedule').on('click', 'input[type="submit"]', function () {
-            //     var clickedValue = $(this).val();
-
-            //     if (clickedValue === "登録") {
-            //         $('form').submit();
-            //     } else if (clickedValue === "キャンセル") {
-            //         $('#externalModal').modal('hide');
-            //     }
-            // });
-
-
-
-
         // フォームの初期化関数
         var initForm = () => {
-            const $form = $('#modalContentPlaceholder').find('form');
+            const $form = $('#modalContentPlaceholder').find('form');         
 
             // 入力コントロールが読み込まれてから入力チェック機能を有効にする
             $.validator.unobtrusive.parse($form);
@@ -245,9 +209,9 @@
                 e.preventDefault();
 
                 if (!$form.valid()) {
-                    return false;
+                     showErrorModal();
                 }
-
+            
                 // Ajaxでpost
                 $.ajax({
                     type: 'post',
@@ -256,25 +220,59 @@
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                 }).done((data) => {
 
-
                     if (data.success) {
 
-                            if ($form.attr('action') === '/Schedules/Create') {
-                                showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？');
-                        } else {
-                                showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？');
+                        if ($form.attr('action') === '/Schedules/Create') {
+                            showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？');
+                        } 
+                        else {
+                            showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？');
                         }
                         handleConfirmationModal(checkButtonHtml);
 
                     } else {
-                        showErrorModal(data, retirementFlag);
+                        showErrorModal();
+                            
+                        $('#modalContentPlaceholder').html(data);
                     }
+                        $('#AllDay').on('change', function () {
+                            checkAllDay(this);
+                        });
                 });
             });
         };
             $('#closeModalBtn, #CloseBtn').click(function () {
                 console.log("閉じるボタンが押された")
-                initForm();
+                if ($form.attr('action') === '/Schedules/Create') {
+                    $.ajax({
+                        url: '/Schedules/Create',
+                        type: 'GET',
+                        success: function (data) {
+                            $('#modalContentPlaceholder').html(data);
+                            $('#exampleModalLabel').text('スケジュールの登録');
+
+                            $('#AllDay').on('change', function () {
+                                checkAllDay(this);
+                            });
+                            initForm();
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Schedules/Edit/' + itemId,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#modalContentPlaceholder').html(data);
+                            $('#exampleModalLabel').text('スケジュールの編集');
+                            checkFlag(all);
+
+                            $('#AllDay').on('change', function () {
+                                checkAllDay(this);
+                            });
+                            initForm();
+                        }
+                    });
+                }
             });
     });
 </script>

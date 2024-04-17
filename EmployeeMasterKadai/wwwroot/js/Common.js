@@ -66,13 +66,9 @@ function showErrorModal(data, retirementFlag) {
             $('#externalModal').modal('hide');
         }
     });
-
-    $('#modalContentPlaceholder').html(data);
-    checkFlag(retirementFlag);
-    $('#retirementFlag').on('change', function () {
-        checkRetirement(this);
-    });
 }
+
+
 
 //確認モーダルのはい・いいえ分岐
 function handleConfirmationModal(checkButtonHtml) {
@@ -89,3 +85,4 @@ function handleConfirmationModal(checkButtonHtml) {
         }
     });
 }
+
