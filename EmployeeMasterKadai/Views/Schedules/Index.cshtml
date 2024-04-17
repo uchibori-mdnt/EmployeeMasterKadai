@@ -87,7 +87,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
-            <div class="modal-footer" id="modalFooter"></div>
+            <div class="modal-footer" id="modalFooterSchedule"></div>
         </div>
     </div>
 </div>
@@ -208,6 +208,32 @@
                 dateTimeInputs.css('color', '#000000');
             }
         }
+
+
+            var submitButtonSchedule = '<div class="d-flex justify-content-end pb-4">' +
+                '<div class="p-2">' +
+                '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
+                '</div>' +
+                '<div class="p-2">' +
+                '<input type="submit" value="登録" class="btn btn-primary" />' +
+                '</div>' +
+                '</div>';
+
+            $('#modalFooterSchedule').html(submitButtonSchedule);
+
+            // 登録ボタンがクリックされた時の処理を追加する
+            $('#modalFooterSchedule').on('click', 'input[type="submit"]', function () {
+                var clickedValue = $(this).val();
+
+                if (clickedValue === "登録") {
+                    $('form').submit();
+                } else if (clickedValue === "キャンセル") {
+                    $('#externalModal').modal('hide');
+                }
+            });
+
+
+
 
         // フォームの初期化関数
         var initForm = () => {
