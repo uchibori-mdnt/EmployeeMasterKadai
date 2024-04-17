@@ -82,7 +82,12 @@
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body" id="modalContentPlaceholder" ></div>
+            <div class="modal-header">
+                <div class="modal-title fs-5" id="exampleModalHeader"></div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContentPlaceholder"></div>
+            <div class="modal-footer" id="modalFooter"></div>
         </div>
     </div>
 </div>
@@ -141,7 +146,8 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
-                        checkFlag(all);
+                    $('#exampleModalHeader').text('スケジュールの編集');
+                    checkFlag(all);
 
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
@@ -177,6 +183,8 @@
                 type: 'GET',
                 success: function (data) {
                     $('#modalContentPlaceholder').html(data);
+                    $('#exampleModalHeader').text('スケジュールの登録');
+
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
                     });

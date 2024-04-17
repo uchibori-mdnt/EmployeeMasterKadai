@@ -4,7 +4,6 @@
     ViewData["Title"] = "Create";
 }
 
-
 <div>
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -52,15 +51,6 @@
                 var formattedUpdatedAt = DateTime.Now.ToString("yyyy年MM月dd日 hh:mm");
             }
             @formattedUpdatedAt
-        </div>
-
-        <div class="d-flex justify-content-end pb-4" id="modalFooter">
-            <div class="p-2">
-                <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
-            </div>
-            <div class="p-2">
-                <input type="submit" value="登録" class="btn btn-primary" />
-            </div>
         </div>
     </form>
 </div>

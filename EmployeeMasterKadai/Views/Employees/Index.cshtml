@@ -76,7 +76,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">社員の登録</h1>
+                <div class="modal-title fs-5" id="exampleModalLabel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
@@ -127,6 +127,7 @@
                     type: 'GET',
                     success: function (data) {
                         $('#modalContentPlaceholder').html(data);
+                        $('#exampleModalLabel').text('社員の編集');
                         checkFlag(retirementFlag);
 
                         $('#retirementFlag').on('change', function () {
@@ -160,6 +161,7 @@
                     type: 'GET',
                     success: function (data) {
                         $('#modalContentPlaceholder').html(data);
+                        $('#exampleModalLabel').text('社員の登録');
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
@@ -194,6 +196,33 @@
                     }
                 });
             }
+
+            var submitButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
+                '<div class="p-2">' +
+                '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
+                '</div>' +
+                '<div class="p-2">' +
+                '<input type="submit" value="登録" class="btn btn-primary" />' +
+                '</div>' +
+                '</div>';
+
+            $('#modalFooter').html(submitButtonHtml);
+
+            // 登録ボタンがクリックされた時の処理を追加する
+            $('#modalFooter').on('click', 'input[type="submit"]', function () {
+                var clickedButtonValue = $(this).val();
+
+                if (clickedButtonValue === "登録") {
+                    $('form').submit();
+                } else if (clickedButtonValue === "キャンセル") {
+                    $('#externalModal').modal('hide');
+                }
+            });
+
+
+
+
+
 
             // フォームの初期化関数
             var initForm = (retirementFlag) => {
