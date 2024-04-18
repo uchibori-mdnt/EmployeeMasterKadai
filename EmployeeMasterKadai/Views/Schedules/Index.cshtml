@@ -230,50 +230,13 @@
                         }
                         handleConfirmationModal(checkButtonHtml);
 
-                    } else {
-                        showErrorModal();
-                            
-                        $('#modalContentPlaceholder').html(data);
-                    }
-                        $('#AllDay').on('change', function () {
-                            checkAllDay(this);
-                        });
+                    } 
+                    else {
+                        showErrorModal();                          
+                     }
                 });
             });
-        };
-            $('#closeModalBtn, #CloseBtn').click(function () {
-                console.log("閉じるボタンが押された")
-                if ($form.attr('action') === '/Schedules/Create') {
-                    $.ajax({
-                        url: '/Schedules/Create',
-                        type: 'GET',
-                        success: function (data) {
-                            $('#modalContentPlaceholder').html(data);
-                            $('#exampleModalLabel').text('スケジュールの登録');
-
-                            $('#AllDay').on('change', function () {
-                                checkAllDay(this);
-                            });
-                            initForm();
-                        }
-                    });
-                } else {
-                    $.ajax({
-                        url: '/Schedules/Edit/' + itemId,
-                        type: 'GET',
-                        success: function (data) {
-                            $('#modalContentPlaceholder').html(data);
-                            $('#exampleModalLabel').text('スケジュールの編集');
-                            checkFlag(all);
-
-                            $('#AllDay').on('change', function () {
-                                checkAllDay(this);
-                            });
-                            initForm();
-                        }
-                    });
-                }
-            });
+        };        
     });
 </script>
 }

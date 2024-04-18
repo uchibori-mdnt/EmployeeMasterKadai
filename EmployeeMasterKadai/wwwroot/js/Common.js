@@ -64,6 +64,7 @@ function showErrorModal(data, retirementFlag) {
 
         if (checkedButtonValue === "閉じる") {
             $('#externalModal').modal('hide');
+            connectTOForm();
         }
     });
 }
