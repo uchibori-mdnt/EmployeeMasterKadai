@@ -24,15 +24,15 @@ namespace EmployeeMasterKadai.Models
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
         [IfTimesNull(ErrorMessage = "退職日を入力してください。")]
         [Column(TypeName = "DATE")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? RetirementDay { get; set; }
         [DisplayName("登録日時")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}")]
         public DateTime CreatedAt { get; set; }
         [DisplayName("更新日時")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}")]
         public DateTime UpdatedAt { get; set; }
 
     }
