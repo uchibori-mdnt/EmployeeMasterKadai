@@ -119,12 +119,11 @@
 <script>
 
     $(document).ready(function () {
-
-        // 編集モーダルを表示するボタンがクリックされた場合
+        
+       // 編集モーダルを表示するボタンがクリックされた場合
         $('.editModal').on('click', function (e) {
             e.preventDefault();
             $('#externalModal').modal('show');
-
 
             var itemId = $(this).data('id');
             var all = $(this).data('all');
@@ -133,6 +132,7 @@
                 url: '/Schedules/Edit/' + itemId,
                 type: 'GET',
                 success: function (data) {
+
                     $('#modalContentPlaceholder').html(data);
                         $('#exampleModalLabel').text('スケジュールの編集');
                     checkFlag(all);
@@ -140,26 +140,12 @@
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
                     });
+                    scheduleTime();
+                    setEditDateTime();
                     initForm();
                 }
             });
         });
-
-        function checkFlag(allDay) {
-            var allDayFlagString = allDay.toString();
-            var dateTimeInputs = $('#dateTimeInputs');
-
-            if (allDayFlagString === "False") {
-                    $('#startDay input[type="datetime-local"]').prop('disabled', false);
-                    $('#endDay input[type="datetime-local"]').prop('disabled', false);
-                    dateTimeInputs.css('color', '#000000');
-            } else {
-                    $('#startDay input[type="datetime-local"]').prop('disabled', true);
-                    $('#endDay input[type="datetime-local"]').prop('disabled', true);
-                    dateTimeInputs.css('color', '#999999');
-            }
-        }
-
 
         // 追加モーダルを表示するボタンがクリックされた場合
         $('#createModal').on('click', function (e) {
@@ -176,12 +162,27 @@
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
                     });
+                    scheduleTime();
                     initForm();
                 }
             });
         });
+        //既存の終日チェック確認
+        function checkFlag(allDay) {
+            var allDayFlagString = allDay.toString();
+            var dateTimeInputs = $('#dateTimeInputs');
 
-
+            if (allDayFlagString === "False") {
+                    $('#startDay input[type="datetime-local"]').prop('disabled', false);
+                    $('#endDay input[type="datetime-local"]').prop('disabled', false);
+                    dateTimeInputs.css('color', '#000000');
+            } else {
+                    $('#startDay input[type="datetime-local"]').prop('disabled', true);
+                    $('#endDay input[type="datetime-local"]').prop('disabled', true);
+                    dateTimeInputs.css('color', '#999999');
+            }
+        }
+        //終日チェックの有無で入力フィールド随時変更
         function checkAllDay(check) {
             var allDayChecked = $(check).prop('checked');
             var dateTimeInputs = $('#dateTimeInputs');
@@ -189,14 +190,14 @@
             if (allDayChecked) {
                 $('#startDay input[type="datetime-local"]').prop('disabled', true);
                 $('#endDay input[type="datetime-local"]').prop('disabled', true);
-                dateTimeInputs.css('color', '#999999');
+                dateTimeInputs.find('input').css('background-color', '#f2f2f2'); 
+
             } else {
                 $('#startDay input[type="datetime-local"]').prop('disabled', false);
                 $('#endDay input[type="datetime-local"]').prop('disabled', false);
-                dateTimeInputs.css('color', '#000000');
+                dateTimeInputs.find('input').css('background-color', '#ffffff');
             }
         }
-
 
         // フォームの初期化関数
         var initForm = () => {
@@ -211,7 +212,7 @@
                 if (!$form.valid()) {
                      showErrorModal();
                 }
-            
+
                 // Ajaxでpost
                 $.ajax({
                     type: 'post',
@@ -236,8 +237,10 @@
                      }
                 });
             });
+
         };        
     });
+
 </script>
 }
 
