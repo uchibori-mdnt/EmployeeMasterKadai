@@ -79,25 +79,25 @@ function combineDateTime() {
 }
 
 
-//スケジュール日付時間を解体
+//スケジュール日付時間を解体、入力フィールドへ表示
 function setEditDateTime() {
     var startDayValue = $('#StartDay').val();
-    var test = new Date(startDayValue);
-    var date = test.getFullYear() + '-' + ('00' + (test.getMonth()+1)).slice(-2) + '-' + ('00' + test.getDay()).slice(-2);
-    //console.log();
-    console.log("StartDayの値:", startDayValue);
+    var endDayValue = $('#EndDay').val();
 
     if (startDayValue) {
-        var dateTimeParts = startDayValue.split(' ');
+        var castStartValue = new Date(startDayValue);
+        var castendValue = new Date(endDayValue);
 
+        var startDateValue = castStartValue.getFullYear() + '-' + ('00' + (castStartValue.getMonth() + 1)).slice(-2) + '-' + ('00' + castStartValue.getDate()).slice(-2);
+        var startTimeValue = ('00' + castStartValue.getHours()).slice(-2) + ':' + ('00' + castStartValue.getMinutes()).slice(-2);
+        var endDateValue = castendValue.getFullYear() + '-' + ('00' + (castendValue.getMonth() + 1)).slice(-2) + '-' + ('00' + castendValue.getDate()).slice(-2);
+        var endTimeValue = ('00' + castendValue.getHours()).slice(-2) + ':' + ('00' + castendValue.getMinutes()).slice(-2);
 
-        var startDateValue = dateTimeParts[0];
-        console.log("日付:", startDateValue);
-        $('#startDateEdit').val(date);
-
-        var startTimeValue = dateTimeParts[1];
-        console.log("時間:", startTimeValue);
+        $('#startDateEdit').val(startDateValue);
         $('#startTimeEdit').val(startTimeValue);
+
+        $('#endDateEdit').val(endDateValue);
+        $('#endTimeEdit').val(endTimeValue);
     }
 }
 
