@@ -112,8 +112,6 @@
     }　
 
     <script>
-
- 
         $(document).ready(function () {
 
             $('.openEditModal').on('click', function (e) {
@@ -173,14 +171,16 @@
 
             function checkRetirement(check) {
                 var retirementFlagChecked = $(check).prop('checked');
-                var stylInputDay = $('#stylInputDay');
+                var retirementDayInput = $('#retirementDayInput input[type="date"]');
 
                 if (retirementFlagChecked) {
-                    $('#retirementDayInput input[type="date"]').prop('disabled', false);
-                    stylInputDay.css('color', '#000000');
+                    retirementDayInput.prop('disabled', false);
+                    retirementDayInput.val('9998-12-31');
+                    $('#stylInputDay').css('color', '#000000');
                 } else {
-                    $('#retirementDayInput input[type="date"]').prop('disabled', true);
-                    stylInputDay.css('color', '#999999');
+                    retirementDayInput.prop('disabled', true);
+                    retirementDayInput.val('');
+                    $('#stylInputDay').css('color', '#999999');
                 }
             }
 
