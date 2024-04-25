@@ -85,7 +85,7 @@
     </div>
 </div>
 
-<!--エラーのモーダルウィンドウ static背景クリックして閉じさせなくしたい-->
+
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: #d5e5ed">
@@ -164,7 +164,7 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm(); // フォームの初期化
+                        initForm();
                     }
                 });
             });
@@ -193,11 +193,24 @@
                         $('#retirementFlag').on('change', function () {
                             checkRetirement(this);
                         });
-                        initForm(); // フォームの初期化
+                        initForm();
                     }
                 });
             }
 
+            function serverErrorModal(message) {
+                $('#messageModal').modal('show');
+                $('#messageLavel').text('確認');
+                $('#modalBody').text(message);
+                $('#closeModalBtn').html(yesButtonHtml);
+
+                $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+                    var checkedButtonValue = $(this).val();
+                    if (checkedButtonValue === "もう一度入力") {
+                        $('#messageModal').modal('hide');
+                    }
+                });
+            }
 
             // フォームの初期化関数
             var initForm = (retirementFlag) => {
@@ -210,31 +223,59 @@
                     e.preventDefault();
 
                     if (!$form.valid()) {
+                        showErrorModal();
                         return false; 
                     }
 
-                    // Ajaxでpost
-                    $.ajax({
-                        type: 'post',
-                        url: $form.attr('action'), // 送信先URL
-                        data: $form.serialize(), // フォームデータ
-                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                    }).done((data) => {              
+                        Promise.all([
+                            $.ajax({
+                                type: 'post',
+                                url: '/Employees/DateInPast',
+                                data: $form.serialize(),
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            }),
+                            $.ajax({
+                                type: 'post',
+                                    url: '/Employees/IfTimesNull',
+                                data: $form.serialize(),
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                            })
+                         ]).then(([dateInPastResponse, ifTimesNullResponse]) => {
 
-                        if (data.success) {
-
-                            if ($form.attr('action') === '/Employees/Create') {
-                                showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？');
-                            } else {
-                                showConfirmationModal('/Employees/Update', '更新します。よろしいですか？');
+                            if (dateInPastResponse.warning) {
+                                serverErrorModal(dateInPastResponse.message);
+                                return;
                             }
-                            handleConfirmationModal(checkButtonHtml);
+                            if (ifTimesNullResponse.warning) {
+                                serverErrorModal(ifTimesNullResponse.message);
+                                return;
+                            }
 
-                        } else {
-                            showErrorModal(data, retirementFlag);               
+
+                        var callback = function () {
+                            $.ajax({
+                                type: 'post',
+                                url: $form.attr('action'), // 送信先URL
+                                data: $form.serialize(), // フォームデータ
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            }).done((data) => {
+                                if (data.success) {
+                                    location.reload();
+                                }
+                                else {
+                                    $('#modalContentPlaceholder').html(data);
+                                    showErrorModal();
+                                }
+                            });
+                        };
+
+                        if ($form.attr('action') === '/Employees/Create') {
+                            showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？', callback);
+                        } 
+                        else {
+                            showConfirmationModal('/Employees/Update', '更新します。よろしいですか？', callback);
                         }
                     });
-
                 });
             };
         });

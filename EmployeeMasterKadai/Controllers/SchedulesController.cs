@@ -2,6 +2,7 @@
 using EmployeeMasterKadai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 
 
@@ -39,7 +40,7 @@ namespace EmployeeMasterKadai.Controllers
             return View(schedule);
         }
 
-        // GET: Schedules/Create ここにRetirementFlagがTrueのEmployeeがJoinPopleに含ませない処理を入れたい
+       
         public IActionResult Create()
         {
             // RetirementFlagがFalseのEmployeeのみを取得して、その名前の配列を作成します
@@ -64,7 +65,6 @@ namespace EmployeeMasterKadai.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
         {
-       
             if (ModelState.IsValid)
             {
                 schedule.CreateDate = DateTime.Now;
@@ -84,6 +84,75 @@ namespace EmployeeMasterKadai.Controllers
 
                 return PartialView(model);
             }
+        }
+
+        [HttpPost]
+        public IActionResult SameSchedule([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        {
+            var joinPeoples = schedule.JoinPeople;
+            if(joinPeoples.Any())
+            {
+                foreach (var joinPeople in joinPeoples)
+                {
+                    if(joinPeople == "")
+                    {
+                        continue;
+                    }
+
+                    foreach (var pickSchedule in _context.Schedules)
+                    {
+                        if (pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
+                        {
+                            var startDate = pickSchedule.StartDay;
+                            var endDate = pickSchedule.EndDay;
+
+                            if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) ||
+                                (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay) ||
+                                ((schedule.AllDay || pickSchedule.AllDay) &&
+                                schedule.StartDay == pickSchedule.StartDay &&
+                                schedule.EndDay == pickSchedule.EndDay))
+                            {
+                                return Json(new { warning = true, message = "スケジュールがかぶっています。" });
+                            }
+                        }
+                    }
+                }
+            }
+            return Json(new { warning = false});
+        }
+
+        [HttpPost]
+        public IActionResult SameDay([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        {
+            if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false)
+            {
+                return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
+            }
+
+            return Json(new { warning = false });
+        }
+
+
+
+        [HttpPost]
+        public IActionResult ChangeDate([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        {
+            if (schedule != null && (schedule.StartDay == null || schedule.EndDay == null) && schedule.AllDay == false)
+            {
+                return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
+            }
+
+            return Json(new { warning = false });
+        }
+
+        public IActionResult OverStartTime([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        {
+            if (schedule != null && (schedule.StartDay > schedule.EndDay) && schedule.AllDay == false)
+            {
+
+                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。もう一度入力してください。" });
+            }
+            return Json(new { warning = false });
         }
 
         // GET: Schedules/Edit/5

@@ -52,14 +52,54 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AllDay)
             </td>
+
+
+                <td>
+                    @{
+                        var startTimeValue = item.StartDay.Value.ToString("HH:mm");
+                        var startDayValue = item.StartDay.Value.ToString("yyyy/MM/dd");
+
+                        if (startTimeValue != "00:00")
+                        {
+                            @Html.DisplayFor(modelItem => item.StartDay)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => startDayValue)    
+                        }                   
+                    }
+                </td>
+                <td>
+                    @{
+                        var endTimeValue = item.EndDay.Value.ToString("HH:mm");
+                        var endDayValue = item.EndDay.Value.ToString("yyyy/MM/dd");
+
+                        if (endTimeValue != "00:00")
+                        {
+                            @Html.DisplayFor(modelItem => item.EndDay)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => endDayValue)
+                        }
+                    }
+                </td>
+
+
+
+
+
+@* 
             <td>
                 @Html.DisplayFor(modelItem => item.StartDay)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndDay)
-            </td>
+            </td> *@
         
             <td>
+                   
+
                 @foreach (var person in item.JoinPeople)
                 {
                     <div>@person</div>
@@ -134,7 +174,7 @@
                 success: function (data) {
 
                     $('#modalContentPlaceholder').html(data);
-                        $('#exampleModalLabel').text('スケジュールの編集');
+                    $('#exampleModalLabel').text('スケジュールの編集');
                     checkFlag(all);
 
                     $('#AllDay').on('change', function () {
@@ -156,8 +196,10 @@
                 url: '/Schedules/Create',
                 type: 'GET',
                 success: function (data) {
+
                     $('#modalContentPlaceholder').html(data);
                         $('#exampleModalLabel').text('スケジュールの登録');
+                        setupTime();
 
                     $('#AllDay').on('change', function () {
                         checkAllDay(this);
@@ -171,75 +213,160 @@
         function checkFlag(allDay) {
             var allDayFlagString = allDay.toString();
             var dateTimeInputs = $('#dateTimeInputs');
+            var dateTimedInputs = $('#dateTimeEndInputs');
 
             if (allDayFlagString === "False") {
                     $('#startDay input[type="datetime-local"]').prop('disabled', false);
-                    $('#endDay input[type="datetime-local"]').prop('disabled', false);
-                    dateTimeInputs.css('color', '#000000');
+                    $('#startTime input[type="datetime-local"]').prop('disabled', false);
+                    $('#startTime').prop('readonly', false);
+                    dateTimeInputs.find('input').css('background-color', '#ffffff');
+                    dateTimedInputs.find('input').css('background-color', '#ffffff');
             } else {
                     $('#startDay input[type="datetime-local"]').prop('disabled', true);
-                    $('#endDay input[type="datetime-local"]').prop('disabled', true);
-                    dateTimeInputs.css('color', '#999999');
+                    $('#startTime input[type="datetime-local"]').prop('disabled', true);
+                    $('#startTime').prop('readonly', true);
+                    dateTimeInputs.find('input').css('background-color', '#f2f2f2');
+                    dateTimedInputs.find('input').css('background-color', '#f2f2f2');
             }
         }
         //終日チェックの有無で入力フィールド随時変更
         function checkAllDay(check) {
             var allDayChecked = $(check).prop('checked');
             var dateTimeInputs = $('#dateTimeInputs');
+            var dateTimedInputs = $('#dateTimeEndInputs');
 
             if (allDayChecked) {
-                $('#startDay input[type="datetime-local"]').prop('disabled', true);
-                $('#endDay input[type="datetime-local"]').prop('disabled', true);
-                dateTimeInputs.find('input').css('background-color', '#f2f2f2'); 
+                $('#startTime input[type="datetime-local"]').prop('disabled', true);
+                $('#endTime input[type="datetime-local"]').prop('disabled', true);
+                $('#startTime').prop('readonly', true);
+
+                dateTimeInputs.find('input').css('background-color', '#f2f2f2');
+                dateTimedInputs.find('input').css('background-color', '#f2f2f2');
+                dateTimeInputs.find('input').val('');
+                dateTimedInputs.find('input').val('');
 
             } else {
-                $('#startDay input[type="datetime-local"]').prop('disabled', false);
-                $('#endDay input[type="datetime-local"]').prop('disabled', false);
+                $('#startTime input[type="datetime-local"]').prop('disabled', false);
+                $('#endTime input[type="datetime-local"]').prop('disabled', false);
+                $('#startTime').prop('readonly', false);
+
                 dateTimeInputs.find('input').css('background-color', '#ffffff');
+                dateTimedInputs.find('input').css('background-color', '#ffffff');
             }
         }
+        function setupTime() {
+            var today = new Date();
+
+            var year = today.getFullYear();
+            var month = String(today.getMonth() + 1).padStart(2, '0');
+            var day = String(today.getDate()).padStart(2, '0');
+
+            var formattedDate = year + '-' + month + '-' + day;
+
+            document.getElementById('startDate').value = formattedDate;
+            document.getElementById('endDate').value = formattedDate;
+        }
+
+            function serverErrorModal(message) {
+                $('#messageModal').modal('show');
+                $('#messageLavel').text('確認');
+                $('#modalBody').text(message);
+                $('#closeModalBtn').html(yesButtonHtml);
+
+                $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+                    var checkedButtonValue = $(this).val();
+                    if (checkedButtonValue === "もう一度入力") {
+                        $('#messageModal').modal('hide');
+                    }
+                });
+            }
 
         // フォームの初期化関数
-        var initForm = () => {
+        var initForm = (AllDay) => {
             const $form = $('#modalContentPlaceholder').find('form');         
 
-            // 入力コントロールが読み込まれてから入力チェック機能を有効にする
             $.validator.unobtrusive.parse($form);
 
             $form.on('submit', function (e) {
                 e.preventDefault();
 
                 if (!$form.valid()) {
-                     showErrorModal();
+                    showErrorModal();
+                    return false;
                 }
+                    Promise.all([
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/SameSchedule',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        }),
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/ChangeDate',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        }),
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/SameDay',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        }),
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/OverStartTime',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        })
+                    ]).then(([sameScheduleResponse, changeDateResponse, sameDayResponse, overStartTimeResponse]) => {
+                 
+                        if (sameScheduleResponse.warning) {
+                            if (confirm(sameScheduleResponse.message) == false) {
+                                return;
+                            }
+                        }
+                        if (sameDayResponse.warning) {
+                            serverErrorModal(sameDayResponse.message);
+                            return;
+                        }
+                        if (changeDateResponse.warning) {
+                            serverErrorModal(changeDateResponse.message);
+                            return;                            
+                        }
+                        if (overStartTimeResponse.warning) {
+                            serverErrorModal(overStartTimeResponse.message);
+                            return;
+                        }
 
-                // Ajaxでpost
-                $.ajax({
-                    type: 'post',
-                    url: $form.attr('action'), // 送信先URL
-                    data: $form.serialize(), // フォームデータ
-                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                }).done((data) => {
 
-                    if (data.success) {
+                        var callback = function () {
+                            $.ajax({
+                                type: 'post',
+                                url: $form.attr('action'), // 送信先URL
+                                data: $form.serialize(), // フォームデータ
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            }).done((data) => {
+                                if (data.success) {
+                                    location.reload();
+                                }
+                                else {
+                                    $('#modalContentPlaceholder').html(data);
+                                    showErrorModal();
+                                }
+                            });
+                        };
 
                         if ($form.attr('action') === '/Schedules/Create') {
-                            showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？');
-                        } 
-                        else {
-                            showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？');
+                            showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？', callback);
                         }
-                        handleConfirmationModal(checkButtonHtml);
-
-                    } 
-                    else {
-                        showErrorModal();                          
-                     }
+                        else {
+                            showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
+                        }
+                    });                
                 });
-            });
-
-        };        
-    });
+            };        
+        });
 
 </script>
 }

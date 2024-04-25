@@ -37,37 +37,36 @@
                 <input id="AllDay" class="form-check-input" asp-for="AllDay" /> @Html.DisplayNameFor(model => model.AllDay)
             </label>
         </div>
-        <div id="dateTimeInputs">
-            <div class="form-group" id="startDay">
-                <label asp-for="StartDay" class="control-label"></label>
-                <div class="row g-0">
-                    <div class="col-md-6">
-                        <input id="startDateEdit" class="form-control" type="date"/>
-                    </div>
-                    <div class="col-md-6">
-                        <input id="startTimeEdit" type="text" list="data-list" class="form-control" />
-                    </div>
+        <div class="form-group" id="startDay">
+            <label asp-for="StartDay" class="control-label"></label>
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <input id="startDateEdit" class="form-control" type="date" />
+                </div>
+                <div id="dateTimeInputs" class="col-md-6">
+                    <input id="startTimeEdit" type="text" list="data-list" class="form-control" />
                 </div>
                 <datalist id="data-list"></datalist>
                 <input type="hidden" id="StartDay" name="StartDay" value="@Model.StartDay" />
                 <span asp-validation-for="StartDay" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="form-group" id="endDay">
-                <label asp-for="EndDay" class="control-label"></label>
-                <div class="row g-0">
-                    <div class="col-md-6">
-                        <input id="endDateEdit" class="form-control" type="date" />
-                    </div>
-                    <div class="col-md-6">
-                        <input id="endTimeEdit" type="text" list="data-list" class="form-control" />
-                    </div>
+        <div class="form-group" id="endDay">
+            <label asp-for="EndDay" class="control-label"></label>
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <input id="endDateEdit" class="form-control" type="date" />
+                </div>
+                <div id="dateTimeEndInputs" class="col-md-6">
+                    <input id="endTimeEdit" type="text" list="data-list" class="form-control" />
                 </div>
                 <datalist id="data-list"></datalist>
                 <input type="hidden" id="EndDay" name="EndDay" value="@Model.EndDay" />
                 <span asp-validation-for="EndDay" class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group">
             <label asp-for="JoinPeople" class="control-label">参加者：</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
@@ -87,5 +86,7 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -46,8 +46,8 @@ $('#modalFooter').on('click', 'input[type="submit"]', function () {
         if (startDateInput != null) {
             combineDateTime()
         }
-
         $('form').submit();
+
     } else if (clickedButtonValue === "キャンセル") {
         $('#externalModal').modal('hide');
     }
@@ -62,12 +62,12 @@ function combineDateTime() {
     var endDateInput = document.getElementById("endDate");
     var endTimeInput = document.getElementById("endTime");
 
-    // endDateInputの定義が追加されました
+
     if (startDateInput != null && endDateInput != null && startTimeInput != null && endTimeInput != null) {
         var startDate = startDateInput.value;
         var startTime = startTimeInput.value;
 
-        var endDate = endDateInput.value; // endDateInputを定義しました
+        var endDate = endDateInput.value;
         var endTime = endTimeInput.value;
 
         var combinedStart = startDate + " " + startTime;
@@ -93,6 +93,11 @@ function setEditDateTime() {
         var endDateValue = castendValue.getFullYear() + '-' + ('00' + (castendValue.getMonth() + 1)).slice(-2) + '-' + ('00' + castendValue.getDate()).slice(-2);
         var endTimeValue = ('00' + castendValue.getHours()).slice(-2) + ':' + ('00' + castendValue.getMinutes()).slice(-2);
 
+        if (startTimeValue === "00:00") {
+            startTimeValue = "";
+            endTimeValue = "";
+        }
+
         $('#startDateEdit').val(startDateValue);
         $('#startTimeEdit').val(startTimeValue);
 
@@ -100,8 +105,6 @@ function setEditDateTime() {
         $('#endTimeEdit').val(endTimeValue);
     }
 }
-
-
 
 //確認メッセージのはいいいえ
 var checkButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
@@ -113,6 +116,11 @@ var checkButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
     '</div>' +
     '</div>';
 
+//もう一度入力のボタン
+var yesButtonHtml = '<div class="p-2">' +
+    '<input type="submit" value="もう一度入力" class="btn btn-primary" />' +
+    '</div>';
+
 //エラーメッセージの閉じるボタン
 var errorCloseButton = '<div class="d-flex justify-content-end pb-4">' +
     '<div class="p-2">' +
@@ -120,7 +128,7 @@ var errorCloseButton = '<div class="d-flex justify-content-end pb-4">' +
     '</div>' +
     '</div>';
 
-function showConfirmationModal(action, message) {
+function showConfirmationModal(action, message, callback) {
     $('#messageModal').modal('show');
     $('#messageLavel').text('確認');
     $('#modalBody').text(message);
@@ -130,16 +138,16 @@ function showConfirmationModal(action, message) {
         var checkedButtonValue = $(this).val();
 
         if (checkedButtonValue === "はい") {
-            $('#externalModal').modal('hide');
-            location.reload();
+            callback();
         } else if (checkedButtonValue === "いいえ") {
-            $('#externalModal').modal('hide');
         }
+        $('#externalModal').modal('hide');
     });
 }
 
+
 //エラーモーダル
-function showErrorModal(data, retirementFlag) {
+function showErrorModal() {
     $('#messageModal').modal('show');
     $('#messageLavel').text('エラー');
     $('#modalBody').text('登録できませんでした。画面を確認してください。');
@@ -157,18 +165,18 @@ function showErrorModal(data, retirementFlag) {
 
 
 
-//確認モーダルのはい・いいえ分岐
-function handleConfirmationModal(checkButtonHtml) {
-    $('#closeModalBtn').html(checkButtonHtml);
+////確認モーダルのはい・いいえ分岐
+//function handleConfirmationModal(checkButtonHtml) {
+//    $('#closeModalBtn').html(checkButtonHtml);
 
-    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
-        var checkedButtonValue = $(this).val();
+//    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+//        var checkedButtonValue = $(this).val();
 
-        if (checkedButtonValue === "はい") {
-            $('#externalModal').modal('hide');
-            location.reload();
-        } else if (checkedButtonValue === "いいえ") {
-            $('#externalModal').modal('hide');
-        }
-    });
-}
+//        if (checkedButtonValue === "はい") {
+//            $('#externalModal').modal('hide');
+//            location.reload();
+//        } else if (checkedButtonValue === "いいえ") {
+//            $('#externalModal').modal('hide');
+//        }
+//    });
+//}

@@ -2,6 +2,8 @@
 using EmployeeMasterKadai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMasterKadai.Controllers
 {
@@ -60,8 +62,35 @@ namespace EmployeeMasterKadai.Controllers
                 await _context.SaveChangesAsync();
                 return Json(new { success = true });
             }
+            else
+            {
+                return PartialView(employeeList);
+            }
+        }
 
-            return PartialView(employeeList);
+        [HttpPost]
+        public IActionResult DateInPast([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
+        {
+            if (employeeList.RetirementDay != null)
+            {
+                if (employeeList.RetirementDay >= DateTime.Today)
+                {
+                    return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
+                }
+            }
+
+            return Json(new { warning = false });
+        }
+
+        [HttpPost]
+        public IActionResult IfTimesNull([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
+        {
+            if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
+            {
+                return Json(new { warning = true, message = "退職日を入力してください。" });
+            }
+
+            return Json(new { warning = false });
         }
 
         // GET: EmployeeLists/Edit/5
