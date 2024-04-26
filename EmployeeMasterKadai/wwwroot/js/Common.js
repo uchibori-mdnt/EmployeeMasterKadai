@@ -1,6 +1,5 @@
 ﻿
 function scheduleTime() {
-
     var dataList = document.getElementById("data-list");
     // 9:00から18:00までの時間を生成してdatalistに挿入
     for (var hour = 9; hour <= 18; hour++) {
@@ -19,7 +18,6 @@ function scheduleTime() {
             }
         }
     }
-
     function pad(number) {
         return (number < 10 ? "0" : "") + number;
     }
@@ -98,11 +96,11 @@ function setEditDateTime() {
             endTimeValue = "";
         }
 
-        $('#startDateEdit').val(startDateValue);
-        $('#startTimeEdit').val(startTimeValue);
+        $('#startDate').val(startDateValue);
+        $('#startTime').val(startTimeValue);
 
-        $('#endDateEdit').val(endDateValue);
-        $('#endTimeEdit').val(endTimeValue);
+        $('#endDate').val(endDateValue);
+        $('#endTime').val(endTimeValue);
     }
 }
 
@@ -162,21 +160,3 @@ function showErrorModal() {
         }
     });
 }
-
-
-
-////確認モーダルのはい・いいえ分岐
-//function handleConfirmationModal(checkButtonHtml) {
-//    $('#closeModalBtn').html(checkButtonHtml);
-
-//    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
-//        var checkedButtonValue = $(this).val();
-
-//        if (checkedButtonValue === "はい") {
-//            $('#externalModal').modal('hide');
-//            location.reload();
-//        } else if (checkedButtonValue === "いいえ") {
-//            $('#externalModal').modal('hide');
-//        }
-//    });
-//}

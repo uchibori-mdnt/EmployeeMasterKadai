@@ -44,10 +44,8 @@
                     <div class="col-md-6">
                         <input id="startDate" class="form-control" type="date" />
                     </div>
-                    <div id="dateTimeInputs">
-                        <div class="col-md-6">
-                            <input id="startTime" type="text" list="data-list" class="form-control" />
-                        </div>
+                    <div id="dateTimeInputs" class="col-md-6">    
+                        <input id="startTime" type="text" list="data-list" class="form-control" />                      
                     </div>
                 </div>
                 <datalist id="data-list"></datalist>
@@ -61,10 +59,8 @@
                     <div class="col-md-6">
                         <input id="endDate" class="form-control" type="date" />
                     </div>
-                    <div id="dateTimeEndInputs">
-                        <div class="col-md-6">
-                            <input id="endTime" type="text" list="data-list" class="form-control" />
-                        </div>
+                    <div id="dateTimeEndInputs" class="col-md-6">     
+                        <input id="endTime" type="text" list="data-list" class="form-control" />    
                     </div>
                 </div>
                 <datalist id="data-list"></datalist>
@@ -72,8 +68,6 @@
                 <span asp-validation-for="EndDay" class="text-danger"></span>
             </div>
     
-
-
         <div class="form-group">
             <label asp-for="JoinPeople" class="control-label">参加者：</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">

@@ -46,10 +46,10 @@
                 <div id="dateTimeInputs" class="col-md-6">
                     <input id="startTimeEdit" type="text" list="data-list" class="form-control" />
                 </div>
+            </div>
                 <datalist id="data-list"></datalist>
                 <input type="hidden" id="StartDay" name="StartDay" value="@Model.StartDay" />
                 <span asp-validation-for="StartDay" class="text-danger"></span>
-            </div>
         </div>
 
         <div class="form-group" id="endDay">
@@ -61,10 +61,10 @@
                 <div id="dateTimeEndInputs" class="col-md-6">
                     <input id="endTimeEdit" type="text" list="data-list" class="form-control" />
                 </div>
+            </div>
                 <datalist id="data-list"></datalist>
                 <input type="hidden" id="EndDay" name="EndDay" value="@Model.EndDay" />
                 <span asp-validation-for="EndDay" class="text-danger"></span>
-            </div>
         </div>
 
         <div class="form-group">
@@ -83,7 +83,6 @@
         </div>
     </form>
 </div>
-
 
 @section Scripts {
     @{

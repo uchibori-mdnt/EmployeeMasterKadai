@@ -83,20 +83,7 @@
                             @Html.DisplayFor(modelItem => endDayValue)
                         }
                     }
-                </td>
-
-
-
-
-
-@* 
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDay)
-            </td> *@
-        
+                </td>      
             <td>
                    
 
@@ -116,8 +103,6 @@
     </tbody>
 </table>
 
-
-
 <!-- モーダルウィンドウ -->
 <div class="modal fade" id="externalModal" tabindex="-1" aria-labelledby="externalModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -131,7 +116,6 @@
         </div>
     </div>
 </div>
-
 
 <!--エラーのモーダルウィンドウ-->
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" data-backdrop="static">
@@ -216,15 +200,15 @@
             var dateTimedInputs = $('#dateTimeEndInputs');
 
             if (allDayFlagString === "False") {
-                    $('#startDay input[type="datetime-local"]').prop('disabled', false);
-                    $('#startTime input[type="datetime-local"]').prop('disabled', false);
                     $('#startTime').prop('readonly', false);
+                    dateTimeInputs.find('input').prop('disabled', false).removeAttr('readonly');
+                    dateTimedInputs.find('input').prop('disabled', false).removeAttr('readonly');
                     dateTimeInputs.find('input').css('background-color', '#ffffff');
                     dateTimedInputs.find('input').css('background-color', '#ffffff');
             } else {
-                    $('#startDay input[type="datetime-local"]').prop('disabled', true);
-                    $('#startTime input[type="datetime-local"]').prop('disabled', true);
                     $('#startTime').prop('readonly', true);
+                    dateTimeInputs.find('input').prop('disabled', true).attr('readonly', true);
+                    dateTimedInputs.find('input').prop('disabled', true).attr('readonly', true);
                     dateTimeInputs.find('input').css('background-color', '#f2f2f2');
                     dateTimedInputs.find('input').css('background-color', '#f2f2f2');
             }
@@ -236,24 +220,23 @@
             var dateTimedInputs = $('#dateTimeEndInputs');
 
             if (allDayChecked) {
-                $('#startTime input[type="datetime-local"]').prop('disabled', true);
-                $('#endTime input[type="datetime-local"]').prop('disabled', true);
                 $('#startTime').prop('readonly', true);
-
+                dateTimeInputs.find('input').prop('disabled', true).attr('readonly', true);
+                dateTimedInputs.find('input').prop('disabled', true).attr('readonly', true);
                 dateTimeInputs.find('input').css('background-color', '#f2f2f2');
                 dateTimedInputs.find('input').css('background-color', '#f2f2f2');
                 dateTimeInputs.find('input').val('');
                 dateTimedInputs.find('input').val('');
 
             } else {
-                $('#startTime input[type="datetime-local"]').prop('disabled', false);
-                $('#endTime input[type="datetime-local"]').prop('disabled', false);
                 $('#startTime').prop('readonly', false);
-
+                dateTimeInputs.find('input').prop('disabled', false).removeAttr('readonly');
+                dateTimedInputs.find('input').prop('disabled', false).removeAttr('readonly');
                 dateTimeInputs.find('input').css('background-color', '#ffffff');
                 dateTimedInputs.find('input').css('background-color', '#ffffff');
             }
         }
+
         function setupTime() {
             var today = new Date();
 

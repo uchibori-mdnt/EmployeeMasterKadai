@@ -43,13 +43,11 @@ namespace EmployeeMasterKadai.Controllers
        
         public IActionResult Create()
         {
-            // RetirementFlagがFalseのEmployeeのみを取得して、その名前の配列を作成します
             var employeeNames = _context.Employees
                 .Where(e => !e.RetirementFlag)
                 .Select(e => e.Name)
                 .ToArray();
 
-            // Scheduleオブジェクトを作成し、JoinPeopleに社員名の配列を設定します
             var model = new Schedule
             {
                 JoinPeople = employeeNames
@@ -106,13 +104,19 @@ namespace EmployeeMasterKadai.Controllers
                             var startDate = pickSchedule.StartDay;
                             var endDate = pickSchedule.EndDay;
 
-                            if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) ||
-                                (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay) ||
-                                ((schedule.AllDay || pickSchedule.AllDay) &&
-                                schedule.StartDay == pickSchedule.StartDay &&
-                                schedule.EndDay == pickSchedule.EndDay))
+                            if (!schedule.AllDay && !pickSchedule.AllDay)
                             {
-                                return Json(new { warning = true, message = "スケジュールがかぶっています。" });
+                                if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) || (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay))
+                                {
+                                    return Json(new { warning = true, message = "スケジュールがかぶっています。" });
+                                }
+                            }
+                            else
+                            {
+                                if ((schedule.AllDay || pickSchedule.AllDay) && schedule.StartDay == pickSchedule.StartDay && schedule.EndDay == pickSchedule.EndDay)
+                                {
+                                    return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
+                                }
                             }
                         }
                     }
@@ -150,7 +154,7 @@ namespace EmployeeMasterKadai.Controllers
             if (schedule != null && (schedule.StartDay > schedule.EndDay) && schedule.AllDay == false)
             {
 
-                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。もう一度入力してください。" });
+                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
             }
             return Json(new { warning = false });
         }
