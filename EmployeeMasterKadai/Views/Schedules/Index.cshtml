@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<EmployeeMasterKadai.Models.Schedule>
-@using EmployeeMasterKadai.Common
+@using EmployeeMasterKadai.Models
 
 @{
     ViewData["Title"] = "Index";
@@ -52,44 +52,58 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AllDay)
             </td>
-
-
-                <td>
-                    @{
-                        var startTimeValue = item.StartDay.Value.ToString("HH:mm");
-                        var startDayValue = item.StartDay.Value.ToString("yyyy/MM/dd");
-
-                        if (startTimeValue != "00:00")
-                        {
-                            @Html.DisplayFor(modelItem => item.StartDay)
-                        }
-                        else
-                        {
-                            @Html.DisplayFor(modelItem => startDayValue)    
-                        }                   
-                    }
-                </td>
-                <td>
-                    @{
-                        var endTimeValue = item.EndDay.Value.ToString("HH:mm");
-                        var endDayValue = item.EndDay.Value.ToString("yyyy/MM/dd");
-
-                        if (endTimeValue != "00:00")
-                        {
-                            @Html.DisplayFor(modelItem => item.EndDay)
-                        }
-                        else
-                        {
-                            @Html.DisplayFor(modelItem => endDayValue)
-                        }
-                    }
-                </td>      
             <td>
-                   
+                    @{
+                        if (item.StartDay.HasValue)
+                        {
+                            var startTimeValue = item.StartDay.Value.ToString("HH:mm");
+                            var startDayValue = item.StartDay.Value.ToString("yyyy/MM/dd");
+
+                            if (startTimeValue != "00:00")
+                            {
+                                                @Html.DisplayFor(modelItem => item.StartDay)
+                            }
+                            else
+                            {
+                                                @Html.DisplayFor(modelItem => startDayValue)
+                            }
+                        }
+                    }
+            </td>
+            <td>
+                    @{
+                        if (item.EndDay.HasValue) 
+                        {
+                            var endTimeValue = item.EndDay.Value.ToString("HH:mm");
+                            var endDayValue = item.EndDay.Value.ToString("yyyy/MM/dd");
+
+                            if (endTimeValue != "00:00")
+                            {
+                                @Html.DisplayFor(modelItem => item.EndDay)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => endDayValue)
+                            }
+                        }
+                    }
+
+            </td>      
+            <td>
+                    @{
+                        HashSet<Guid> selectedEmployeeIds = new HashSet<Guid>(item.JoinPeople);
+                    }
+
+                    @foreach (var employeeId in item.JoinPeople)
+                    {                       
+                        var employees = ViewBag.EmployeeContext as IEnumerable<Employee>;
+                        var employee = employees.FirstOrDefault(e => e.Id == employeeId);
+
+                        <div>@employee.Name</div>
+                    }
 
                 @foreach (var person in item.JoinPeople)
                 {
-                    <div>@person</div>
                 }
             </td>
             <td>
@@ -301,25 +315,26 @@
                             url: '/Schedules/OverStartTime',
                             data: $form.serialize(),
                             contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+
                         })
                     ]).then(([sameScheduleResponse, changeDateResponse, sameDayResponse, overStartTimeResponse]) => {
-                 
+
                         if (sameScheduleResponse.warning) {
-                            if (confirm(sameScheduleResponse.message) == false) {
+                            if (confirm(sameScheduleResponse.message) === false) {
                                 return;
                             }
                         }
                         if (sameDayResponse.warning) {
-                            serverErrorModal(sameDayResponse.message);
-                            return;
+                            serverErrorModal(sameDayResponse.message)
+                            return;                      
                         }
                         if (changeDateResponse.warning) {
-                            serverErrorModal(changeDateResponse.message);
-                            return;                            
+                            serverErrorModal(changeDateResponse.message)
+                            return;                                                        
                         }
                         if (overStartTimeResponse.warning) {
-                            serverErrorModal(overStartTimeResponse.message);
-                            return;
+                            serverErrorModal(overStartTimeResponse.message)
+                            return;                          
                         }
 
 

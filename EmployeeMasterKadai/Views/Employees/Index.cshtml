@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<EmployeeMasterKadai.Models.Employee>
-@using EmployeeMasterKadai.Common
 
 @{
     ViewData["Title"] = "Index";
@@ -125,6 +124,7 @@
                     url: '/Employees/Edit/' + itemId,
                     type: 'GET',
                     success: function (data) {
+
                         $('#modalContentPlaceholder').html(data);
                         $('#exampleModalLabel').text('社員の編集');
                         checkFlag(retirementFlag);

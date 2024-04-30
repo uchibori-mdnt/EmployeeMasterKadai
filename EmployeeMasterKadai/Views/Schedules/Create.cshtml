@@ -16,7 +16,7 @@
         <div class="form-group">
             <label asp-for="Organizer" class="control-label"></label>
             <div>
-                @Html.DropDownListFor(model => model.Organizer, new SelectList(Model.JoinPeople), "選択してください", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.Organizer, new SelectList(ViewBag.People), "選択してください", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -72,11 +72,11 @@
             <label asp-for="JoinPeople" class="control-label">参加者：</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
 
-                @foreach (var name in Model.JoinPeople)
+                @foreach (var employee in ViewBag.People)
                 {
                     <div class="form-check ml-2">
-                        <input type="checkbox" name="JoinPeople" value="@name" class="form-check-input" />
-                        <label class="form-check-label" for="@name">@name</label>
+                        <input type="checkbox" name="selectedEmployeeNames" value="@employee" class="form-check-input" />
+                        <label class="form-check-label" for="@employee">@employee</label>
                     </div>
                 }
             </div>

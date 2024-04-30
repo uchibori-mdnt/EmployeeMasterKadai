@@ -54,12 +54,9 @@ $('#modalFooter').on('click', 'input[type="submit"]', function () {
 //スケジュール日付時間を合体
 function combineDateTime() {
     var startDateInput = document.getElementById("startDate");
-
     var startTimeInput = document.getElementById("startTime");
-
     var endDateInput = document.getElementById("endDate");
     var endTimeInput = document.getElementById("endTime");
-
 
     if (startDateInput != null && endDateInput != null && startTimeInput != null && endTimeInput != null) {
         var startDate = startDateInput.value;
@@ -81,6 +78,7 @@ function combineDateTime() {
 function setEditDateTime() {
     var startDayValue = $('#StartDay').val();
     var endDayValue = $('#EndDay').val();
+    console.log(startDayValue)
 
     if (startDayValue) {
         var castStartValue = new Date(startDayValue);
@@ -92,15 +90,16 @@ function setEditDateTime() {
         var endTimeValue = ('00' + castendValue.getHours()).slice(-2) + ':' + ('00' + castendValue.getMinutes()).slice(-2);
 
         if (startTimeValue === "00:00") {
-            startTimeValue = "";
-            endTimeValue = "";
+            $('#startDate').val(startDateValue);
+            $('#endDate').val(endDateValue);
         }
+        else {
+            $('#startDate').val(startDateValue);
+            $('#startTime').val(startTimeValue);
 
-        $('#startDate').val(startDateValue);
-        $('#startTime').val(startTimeValue);
-
-        $('#endDate').val(endDateValue);
-        $('#endTime').val(endTimeValue);
+            $('#endDate').val(endDateValue);
+            $('#endTime').val(endTimeValue);
+        }
     }
 }
 

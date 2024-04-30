@@ -32,7 +32,8 @@ namespace EmployeeMasterKadai.Models
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         public DateTime? EndDay { get; set; }
         [DisplayName("参加候補者")]
-        public string[] JoinPeople { get; set; } = string.Empty.Split(',');
+        public Guid[] JoinPeople { get; set; } = new Guid[0];
+
 
         [ScaffoldColumn(false)]
         public DateTime CreateDate { get; set; }

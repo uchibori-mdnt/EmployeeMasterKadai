@@ -21,8 +21,8 @@ namespace EmployeeMasterKadai.Models
         public bool RetirementFlag { get; set; }
         [DisplayName("退職日")]
         [DataType(DataType.DateTime)]
-        [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
-        [IfTimesNull(ErrorMessage = "退職日を入力してください。")]
+        //[DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
+        //[IfTimesNull(ErrorMessage = "退職日を入力してください。")]
         [Column(TypeName = "DATE")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? RetirementDay { get; set; }
