@@ -195,13 +195,15 @@ namespace EmployeeMasterKadai.Controllers
         }
 
         [HttpPost]
-        public IActionResult SameSchedule([Bind("AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        public IActionResult SameSchedule([Bind("AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
         {
-            var joinPeoples = schedule.JoinPeople;
-            if(joinPeoples.Any())
+            if(selectedEmployeeNames != null)
             {
-                foreach (var joinPeople in joinPeoples)
+                foreach (var employeeName in selectedEmployeeNames)
                 {
+                    var scheduleId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
+                    var joinPeople = scheduleId.Id;
+
                     foreach (var pickSchedule in _context.Schedules)
                     {
                         if (pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
@@ -227,6 +229,7 @@ namespace EmployeeMasterKadai.Controllers
                     }
                 }
             }
+            
             return Json(new { warning = false});
         }
 
