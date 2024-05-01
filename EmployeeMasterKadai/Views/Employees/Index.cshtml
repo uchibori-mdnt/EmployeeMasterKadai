@@ -100,10 +100,7 @@
     </div>
 </div>
 
-
 <script src="~/js/Common.js"></script>
-
-
 
 @section Scripts {
     @{
@@ -127,17 +124,35 @@
 
                         $('#modalContentPlaceholder').html(data);
                         $('#exampleModalLabel').text('社員の編集');
-                        checkFlag(retirementFlag);
+                        setFlagChecked(retirementFlag);
 
                         $('#retirementFlag').on('change', function () {
-                            checkRetirement(this);
+                            changeFlagChecked(this);
                         });
                         initForm();
                     }
                 });
             });
 
-            function checkFlag(retirementFlag) {
+            $('#openCreateModal').on('click', function (e) {
+                e.preventDefault();
+                $('#externalModal').modal('show');
+
+                $.ajax({
+                    url: '/Employees/Create',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#modalContentPlaceholder').html(data);
+                        $('#exampleModalLabel').text('社員の登録');
+                        $('#retirementFlag').on('change', function () {
+                            changeFlagChecked(this);
+                        });
+                        initForm();
+                    }
+                });
+            });
+
+            function setFlagChecked(retirementFlag) {
                 var retirementFlagString = retirementFlag.toString();
                 var stylInputDay = $('#stylInputDay');
 
@@ -150,26 +165,7 @@
                 }
             }
 
-            // Createボタンがクリックされた時の処理
-            $('#openCreateModal').on('click', function (e) {
-                e.preventDefault();
-                $('#externalModal').modal('show');
-
-                $.ajax({
-                    url: '/Employees/Create',
-                    type: 'GET',
-                    success: function (data) {
-                        $('#modalContentPlaceholder').html(data);
-                        $('#exampleModalLabel').text('社員の登録');
-                        $('#retirementFlag').on('change', function () {
-                            checkRetirement(this);
-                        });
-                        initForm();
-                    }
-                });
-            });
-
-            function checkRetirement(check) {
+            function changeFlagChecked(check) {
                 var retirementFlagChecked = $(check).prop('checked');
                 var retirementDayInput = $('#retirementDayInput input[type="date"]');
 
@@ -184,35 +180,6 @@
                 }
             }
 
-            function connectTOForm() {
-                $.ajax({
-                    url: '/Employees/Create',
-                    type: 'GET',
-                    success: function (data) {
-                        $('#modalContentPlaceholder').html(data);
-                        $('#retirementFlag').on('change', function () {
-                            checkRetirement(this);
-                        });
-                        initForm();
-                    }
-                });
-            }
-
-            function serverErrorModal(message) {
-                $('#messageModal').modal('show');
-                $('#messageLavel').text('確認');
-                $('#modalBody').text(message);
-                $('#closeModalBtn').html(yesButtonHtml);
-
-                $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
-                    var checkedButtonValue = $(this).val();
-                    if (checkedButtonValue === "もう一度入力") {
-                        $('#messageModal').modal('hide');
-                    }
-                });
-            }
-
-            // フォームの初期化関数
             var initForm = (retirementFlag) => {
                 const $form = $('#modalContentPlaceholder').find('form');
 
@@ -255,8 +222,8 @@
                         var callback = function () {
                             $.ajax({
                                 type: 'post',
-                                url: $form.attr('action'), // 送信先URL
-                                data: $form.serialize(), // フォームデータ
+                                url: $form.attr('action'), 
+                                data: $form.serialize(), 
                                 contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                             }).done((data) => {
                                 if (data.success) {

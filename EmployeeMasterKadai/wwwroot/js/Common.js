@@ -154,8 +154,21 @@ function showErrorModal() {
         var checkedButtonValue = $(this).val();
 
         if (checkedButtonValue === "閉じる") {
-            $('#externalModal').modal('hide');
-            connectTOForm();
+            $('#messageModal').modal('hide');
+        }
+    });
+}
+
+function serverErrorModal(message) {
+    $('#messageModal').modal('show');
+    $('#messageLavel').text('確認');
+    $('#modalBody').text(message);
+    $('#closeModalBtn').html(yesButtonHtml);
+
+    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+        var checkedButtonValue = $(this).val();
+        if (checkedButtonValue === "もう一度入力") {
+            $('#messageModal').modal('hide');
         }
     });
 }

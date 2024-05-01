@@ -61,11 +61,11 @@
 
                             if (startTimeValue != "00:00")
                             {
-                                                @Html.DisplayFor(modelItem => item.StartDay)
+                                @Html.DisplayFor(modelItem => item.StartDay)
                             }
                             else
                             {
-                                                @Html.DisplayFor(modelItem => startDayValue)
+                                @Html.DisplayFor(modelItem => startDayValue)
                             }
                         }
                     }
@@ -90,27 +90,27 @@
 
             </td>      
             <td>
-                    @{
-                        HashSet<Guid> selectedEmployeeIds = new HashSet<Guid>(item.JoinPeople);
-                    }
+                @{
+                    HashSet<Guid> selectedEmployeeIds = new HashSet<Guid>(item.JoinPeople);
+                }
 
-                    @foreach (var employeeId in item.JoinPeople)
-                    {                       
-                        var employees = ViewBag.EmployeeContext as IEnumerable<Employee>;
-                        var employee = employees.FirstOrDefault(e => e.Id == employeeId);
+                @foreach (var employeeId in item.JoinPeople)
+                {                       
+                    var employees = ViewBag.EmployeeContext as IEnumerable<Employee>;
+                    var employee = employees.FirstOrDefault(e => e.Id == employeeId);
 
-                        <div>@employee.Name</div>
-                    }
+                    <div>@employee.Name</div>
+                }
 
                 @foreach (var person in item.JoinPeople)
                 {
                 }
             </td>
             <td>
-                    <button type="button" class="btn btn-primary editModal" data-id="@item.Id" data-all="@item.AllDay">
-                        編集<i class="bi bi-person-add"></i>
-                    </button>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">削除</a>
+                <button type="button" class="btn btn-primary editModal" data-id="@item.Id" data-all="@item.AllDay">
+                    編集<i class="bi bi-person-add"></i>
+                </button>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">削除</a>
             </td>
         </tr>
 }
@@ -147,18 +147,17 @@
     </div>
 </div>
 
-<script src="~/js/Common.js"></script>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+<script src="~/js/Common.js"></script>
 
 <script>
 
     $(document).ready(function () {
         
-       // 編集モーダルを表示するボタンがクリックされた場合
         $('.editModal').on('click', function (e) {
             e.preventDefault();
             $('#externalModal').modal('show');
@@ -173,10 +172,10 @@
 
                     $('#modalContentPlaceholder').html(data);
                     $('#exampleModalLabel').text('スケジュールの編集');
-                    checkFlag(all);
+                    setAllDayChecked(all);
 
                     $('#AllDay').on('change', function () {
-                        checkAllDay(this);
+                        changeAllDayChecked(this);
                     });
                     scheduleTime();
                     setEditDateTime();
@@ -185,7 +184,6 @@
             });
         });
 
-        // 追加モーダルを表示するボタンがクリックされた場合
         $('#createModal').on('click', function (e) {
             e.preventDefault();
             $('#externalModal').modal('show');
@@ -196,64 +194,54 @@
                 success: function (data) {
 
                     $('#modalContentPlaceholder').html(data);
-                        $('#exampleModalLabel').text('スケジュールの登録');
-                        setupTime();
+                    $('#exampleModalLabel').text('スケジュールの登録');
+                    setupTime();
 
                     $('#AllDay').on('change', function () {
-                        checkAllDay(this);
+                        changeAllDayChecked(this);
                     });
                     scheduleTime();
                     initForm();
                 }
             });
         });
+
         //既存の終日チェック確認
-        function checkFlag(allDay) {
+        function setAllDayChecked(allDay) {
             var allDayFlagString = allDay.toString();
-            var dateTimeInputs = $('#dateTimeInputs');
-            var dateTimedInputs = $('#dateTimeEndInputs');
+            var startTimeBox = $('#startTimeBox');
+            var endTimeBox = $('#endTimeBox');
 
             if (allDayFlagString === "False") {
-                    $('#startTime').prop('readonly', false);
-                    dateTimeInputs.find('input').prop('disabled', false).removeAttr('readonly');
-                    dateTimedInputs.find('input').prop('disabled', false).removeAttr('readonly');
-                    dateTimeInputs.find('input').css('background-color', '#ffffff');
-                    dateTimedInputs.find('input').css('background-color', '#ffffff');
+                $('#startTime').prop('readonly', false);
+                startTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
+                endTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
             } else {
-                    $('#startTime').prop('readonly', true);
-                    dateTimeInputs.find('input').prop('disabled', true).attr('readonly', true);
-                    dateTimedInputs.find('input').prop('disabled', true).attr('readonly', true);
-                    dateTimeInputs.find('input').css('background-color', '#f2f2f2');
-                    dateTimedInputs.find('input').css('background-color', '#f2f2f2');
+                $('#startTime').prop('readonly', true);
+                startTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2');
+                endTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2');
             }
         }
         //終日チェックの有無で入力フィールド随時変更
-        function checkAllDay(check) {
+        function changeAllDayChecked(check) {
             var allDayChecked = $(check).prop('checked');
-            var dateTimeInputs = $('#dateTimeInputs');
-            var dateTimedInputs = $('#dateTimeEndInputs');
+            var startTimeBox = $('#startTimeBox');
+            var endTimeBox = $('#endTimeBox');
 
             if (allDayChecked) {
                 $('#startTime').prop('readonly', true);
-                dateTimeInputs.find('input').prop('disabled', true).attr('readonly', true);
-                dateTimedInputs.find('input').prop('disabled', true).attr('readonly', true);
-                dateTimeInputs.find('input').css('background-color', '#f2f2f2');
-                dateTimedInputs.find('input').css('background-color', '#f2f2f2');
-                dateTimeInputs.find('input').val('');
-                dateTimedInputs.find('input').val('');
-
-            } else {
+                startTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2').val('');
+                endTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2').val('');
+            } 
+            else {
                 $('#startTime').prop('readonly', false);
-                dateTimeInputs.find('input').prop('disabled', false).removeAttr('readonly');
-                dateTimedInputs.find('input').prop('disabled', false).removeAttr('readonly');
-                dateTimeInputs.find('input').css('background-color', '#ffffff');
-                dateTimedInputs.find('input').css('background-color', '#ffffff');
+                startTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
+                endTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
             }
         }
 
         function setupTime() {
             var today = new Date();
-
             var year = today.getFullYear();
             var month = String(today.getMonth() + 1).padStart(2, '0');
             var day = String(today.getDate()).padStart(2, '0');
@@ -264,21 +252,6 @@
             document.getElementById('endDate').value = formattedDate;
         }
 
-            function serverErrorModal(message) {
-                $('#messageModal').modal('show');
-                $('#messageLavel').text('確認');
-                $('#modalBody').text(message);
-                $('#closeModalBtn').html(yesButtonHtml);
-
-                $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
-                    var checkedButtonValue = $(this).val();
-                    if (checkedButtonValue === "もう一度入力") {
-                        $('#messageModal').modal('hide');
-                    }
-                });
-            }
-
-        // フォームの初期化関数
         var initForm = (AllDay) => {
             const $form = $('#modalContentPlaceholder').find('form');         
 
@@ -341,8 +314,8 @@
                         var callback = function () {
                             $.ajax({
                                 type: 'post',
-                                url: $form.attr('action'), // 送信先URL
-                                data: $form.serialize(), // フォームデータ
+                                url: $form.attr('action'),
+                                data: $form.serialize(),
                                 contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                             }).done((data) => {
                                 if (data.success) {
