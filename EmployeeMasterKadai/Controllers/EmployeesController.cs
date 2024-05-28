@@ -73,7 +73,7 @@ namespace EmployeeMasterKadai.Controllers
         {
             if (employeeList.RetirementDay != null)
             {
-                if (employeeList.RetirementDay >= DateTime.Today)
+                if (employeeList.RetirementDay > DateTime.Today)
                 {
                     return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
                 }

@@ -281,7 +281,7 @@ namespace EmployeeMasterKadai.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.EmployeeContext = await _context.Employees.ToListAsync();
             return View(schedule);
         }
 

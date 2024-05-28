@@ -102,9 +102,6 @@
                     <div>@employee.Name</div>
                 }
 
-                @foreach (var person in item.JoinPeople)
-                {
-                }
             </td>
             <td>
                 <button type="button" class="btn btn-primary editModal" data-id="@item.Id" data-all="@item.AllDay">
@@ -178,6 +175,7 @@
                         changeAllDayChecked(this);
                     });
                     scheduleTime();
+                        
                     setEditDateTime();
                     initForm();
                 }

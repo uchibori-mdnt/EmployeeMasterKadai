@@ -14,17 +14,48 @@ function scheduleTime() {
                 var time = "18:00"; 
                 option.value = time;
                 dataList.appendChild(option);
-                return;
             }
         }
     }
     function pad(number) {
         return (number < 10 ? "0" : "") + number;
     }
+    displayDatalist();
+    displayEndDatalist();
 }
 
+function displayDatalist() {
+    var temp = "";
+    $("#startTime").mousedown(function () {
+        temp = $("#startTime").val();
+        //入力を削除する
+        $("#startTime").val("");
+    });
+    //候補が表示された後に入力値を入れ直す
+    $("#startTime").click(function () {
+        if (temp !== "") {
+            $("#startTime").val(temp);
+        }
+    });
+}
+
+function displayEndDatalist() {
+    var temp = "";
+    $("#endTime").mousedown(function () {
+        temp = $("#endTime").val();
+        $("#endTime").val("");
+    });
+
+    $("#endTime").click(function () {
+        if (temp !== "") {
+            $("#endTime").val(temp);
+        }
+    });
+}
+
+
 //モーダル画面の確認ボタン
-var submitButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
+var submitButtonHtml = '<div class="d-flex justify-content-end">' +
     '<div class="p-2">' +
     '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</a>' +
     '</div>' +
@@ -34,6 +65,7 @@ var submitButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
     '</div>';
 
 $('#modalFooter').html(submitButtonHtml);
+
 
 // 登録ボタンorキャンセルボタンが押された時の処理
 $('#modalFooter').on('click', 'input[type="submit"]', function () {
@@ -50,6 +82,7 @@ $('#modalFooter').on('click', 'input[type="submit"]', function () {
         $('#externalModal').modal('hide');
     }
 });
+
 
 //スケジュール日付時間を合体
 function combineDateTime() {
@@ -104,7 +137,7 @@ function setEditDateTime() {
 }
 
 //確認メッセージのはいいいえ
-var checkButtonHtml = '<div class="d-flex justify-content-end pb-4">' +
+var checkButtonHtml = '<div class="d-flex justify-content-end">' +
     '<div class="p-2">' +
     '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</a>' +
     '</div>' +
@@ -119,7 +152,7 @@ var yesButtonHtml = '<div class="p-2">' +
     '</div>';
 
 //エラーメッセージの閉じるボタン
-var errorCloseButton = '<div class="d-flex justify-content-end pb-4">' +
+var errorCloseButton = '<div class="d-flex justify-content-end">' +
     '<div class="p-2">' +
     '<a asp-action="Index" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</a>' +
     '</div>' +
@@ -131,12 +164,14 @@ function showConfirmationModal(action, message, callback) {
     $('#modalBody').text(message);
     $('#closeModalBtn').html(checkButtonHtml);
 
-    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+    $('#closeModalBtn').off('click').on('click', 'input[type="submit"]', function () {
         var checkedButtonValue = $(this).val();
 
         if (checkedButtonValue === "はい") {
             callback();
         } else if (checkedButtonValue === "いいえ") {
+
+            return;
         }
         $('#externalModal').modal('hide');
     });

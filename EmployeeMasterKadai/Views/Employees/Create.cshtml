@@ -36,22 +36,6 @@
                 <span asp-validation-for="RetirementDay" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="CreatedAt" class="control-label"></label>
-            @{
-                var formattedCreatedAt = DateTime.Now.ToString("yyyy年MM月dd日 hh:mm");
-            }
-            @formattedCreatedAt
-                   
-        </div>
-            
-        <div class="form-group">
-            <label asp-for="UpdatedAt" class="control-label"></label>
-            @{
-                var formattedUpdatedAt = DateTime.Now.ToString("yyyy年MM月dd日 hh:mm");
-            }
-            @formattedUpdatedAt
-        </div>
     </form>
 </div>
 
