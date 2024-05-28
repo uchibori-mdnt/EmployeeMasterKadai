@@ -83,9 +83,9 @@
                     var employee = employees.FirstOrDefault(e => e.Id == employeeId);
 
                     <div class="form-check ml-2">
-                        <input type="checkbox" id="@("checkbox_" + employee)" name="selectedEmployeeNames" value="@employee.Name" class="form-check-input" @(isChecked ? "checked" : "") />
-                        <label class="form-check-label" for="@("checkbox_" + employee)">@employee.Name</label>
-                    </div>                  
+                        <input type="checkbox" id="@("checkbox_" + employee.Id)" name="selectedEmployeeNames" value="@employee.Name" class="form-check-input" @(isChecked ? "checked" : "") />
+                        <label class="form-check-label" for="@("checkbox_" + employee.Id)">@employee.Name</label>
+                    </div>
                 }             
             </div>
         </div>

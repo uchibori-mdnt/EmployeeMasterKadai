@@ -195,18 +195,18 @@ namespace EmployeeMasterKadai.Controllers
         }
 
         [HttpPost]
-        public IActionResult SameSchedule([Bind("AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
+        public IActionResult SameSchedule([Bind("Id,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
         {
             if(selectedEmployeeNames != null)
             {
                 foreach (var employeeName in selectedEmployeeNames)
                 {
-                    var scheduleId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
-                    var joinPeople = scheduleId.Id;
+                    var employeeId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
+                    var joinPeople = employeeId.Id;
 
                     foreach (var pickSchedule in _context.Schedules)
                     {
-                        if (pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
+                        if (schedule.Id != pickSchedule.Id && pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
                         {
                             var startDate = pickSchedule.StartDay;
                             var endDate = pickSchedule.EndDay;
