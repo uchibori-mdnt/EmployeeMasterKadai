@@ -169,11 +169,10 @@ function showConfirmationModal(action, message, callback) {
 
         if (checkedButtonValue === "はい") {
             callback();
-        } else if (checkedButtonValue === "いいえ") {
-
-            return;
         }
-        $('#externalModal').modal('hide');
+        else if (checkedButtonValue === "いいえ") {
+            $('#messageModal').modal('hide');
+        }
     });
 }
 
@@ -193,6 +192,7 @@ function showErrorModal() {
         }
     });
 }
+
 
 function serverErrorModal(message) {
     $('#messageModal').modal('show');

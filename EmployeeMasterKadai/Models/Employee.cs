@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeMasterKadai.Models
 {
-    public class Employee/*:IValidatableObject*/
+    public class Employee : IValidatableObject
     {
         [Key]
         [ScaffoldColumn(false)]
@@ -35,5 +35,17 @@ namespace EmployeeMasterKadai.Models
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:ss}")]
         public DateTime UpdatedAt { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (RetirementFlag && RetirementDay == null)
+            {
+                yield return new ValidationResult("退職日を入力してください。", new[] { nameof(RetirementDay) });
+            }
+
+            if (RetirementDay.HasValue && RetirementDay.Value > DateTime.Now)
+            {
+                yield return new ValidationResult("退職日は本日以前の日付を入力してください。", new[] { nameof(RetirementDay) });
+            }
+        }
     }
 }
