@@ -160,6 +160,7 @@
             var itemId = $(this).data('id');
             all = $(this).data('all');
 
+
             $.ajax({
                 url: '/Schedules/Edit/' + itemId,
                 type: 'GET',
@@ -204,16 +205,13 @@
 
         //既存の終日チェック確認
         function setAllDayChecked(allDay) {
-                console.log(allDay);
-                if (allDay === undefined || allDay === null || allDay === "False") {
-                allDay = false;
-            }
+
             var allDayFlagString = allDay.toString();
 
             var startTimeBox = $('#startTimeBox');
             var endTimeBox = $('#endTimeBox');
 
-            if (allDayFlagString === "false") {
+            if (allDayFlagString === "False") {
                 $('#startTime').prop('readonly', false);
                 startTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
                 endTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
@@ -254,9 +252,9 @@
             document.getElementById('endDate').value = formattedDate;
         }
 
-            //終日（AllDay）がfalseでエラーになった場合、trueに変えてもfalseでとうろくされてしまう/changeAllDayCheckedのcheckはtrueになってる
-            function reSaveSchedule(all) {
-                setAllDayChecked(all);
+            //AllDayにチェックをしてサーバーエラーになった場合、強制的にfalseになっているため、チェックはついているのに時間が入力できる状態になる
+            function reSaveSchedule() {
+                $('#AllDay').prop('checked', false);
 
                 $('#AllDay').on('change', function () {
                     changeAllDayChecked(this);
@@ -340,12 +338,17 @@
                                 }
                                 else {
                                     $('#modalContentPlaceholder').html(data);
-                                    all = $(this).data('all');
+  
                                     setupTime();
-                                    reSaveSchedule(all);
+                                    reSaveSchedule();
                                 }
                             });
                         };
+
+
+
+
+
 
                         if ($form.attr('action') === '/Schedules/Create') {
                             showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？', callback);

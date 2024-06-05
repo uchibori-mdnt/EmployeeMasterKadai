@@ -111,7 +111,6 @@ function combineDateTime() {
 function setEditDateTime() {
     var startDayValue = $('#StartDay').val();
     var endDayValue = $('#EndDay').val();
-    console.log(startDayValue)
 
     if (startDayValue) {
         var castStartValue = new Date(startDayValue);
