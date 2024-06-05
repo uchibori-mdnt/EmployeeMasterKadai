@@ -25,8 +25,8 @@ namespace EmployeeMasterKadai.Models
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}",ApplyFormatInEditMode =false)]
         public DateTime? StartDay { get; set; }
         [DisplayName("終了日時")]
+        [IsNullScheduleDate(ErrorMessage = "開始時刻と終了時刻を入力してください。")]
         [SameDay(ErrorMessage = "開始時刻と終了時刻が同じになっています。")]
-        [ChangeDateField(ErrorMessage = "開始時刻と終了時刻を入力してください。")]
         [CheckReverseTime(ErrorMessage = "開始時刻が終了時刻を超えることはできません。")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]

@@ -194,78 +194,78 @@ namespace EmployeeMasterKadai.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult SameSchedule([Bind("Id,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
-        {
-            if(selectedEmployeeNames != null)
-            {
-                foreach (var employeeName in selectedEmployeeNames)
-                {
-                    var employeeId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
-                    var joinPeople = employeeId.Id;
+        //[HttpPost]
+        //public IActionResult SameSchedule([Bind("Id,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
+        //{
+        //    if(selectedEmployeeNames != null)
+        //    {
+        //        foreach (var employeeName in selectedEmployeeNames)
+        //        {
+        //            var employeeId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
+        //            var joinPeople = employeeId.Id;
 
-                    foreach (var pickSchedule in _context.Schedules)
-                    {
-                        if (schedule.Id != pickSchedule.Id && pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
-                        {
-                            var startDate = pickSchedule.StartDay;
-                            var endDate = pickSchedule.EndDay;
+        //            foreach (var pickSchedule in _context.Schedules)
+        //            {
+        //                if (schedule.Id != pickSchedule.Id && pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
+        //                {
+        //                    var startDate = pickSchedule.StartDay;
+        //                    var endDate = pickSchedule.EndDay;
 
-                            if (!schedule.AllDay && !pickSchedule.AllDay)
-                            {
-                                if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) || (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay))
-                                {
-                                    return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
-                                }
-                            }
-                            else
-                            {
-                                if ((schedule.AllDay || pickSchedule.AllDay) && schedule.StartDay == pickSchedule.StartDay && schedule.EndDay == pickSchedule.EndDay)
-                                {
-                                    return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        //                    if (!schedule.AllDay && !pickSchedule.AllDay)
+        //                    {
+        //                        if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) || (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay))
+        //                        {
+        //                            return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        if ((schedule.AllDay || pickSchedule.AllDay) && schedule.StartDay == pickSchedule.StartDay && schedule.EndDay == pickSchedule.EndDay)
+        //                        {
+        //                            return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
             
-            return Json(new { warning = false});
-        }
+        //    return Json(new { warning = false});
+        //}
 
-        [HttpPost]
-        public IActionResult SameDay([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        {
+        //[HttpPost]
+        //public IActionResult SameDay([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        //{
 
-            if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false)
-            {
-                return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
-            }
+        //    if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false)
+        //    {
+        //        return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
+        //    }
 
-            return Json(new { warning = false });
-        }
+        //    return Json(new { warning = false });
+        //}
 
 
 
-        [HttpPost]
-        public IActionResult ChangeDate([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        {
-            if (schedule != null && (schedule.StartDay == null || schedule.EndDay == null) && schedule.AllDay == false)
-            {
-                return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
-            }
+        //[HttpPost]
+        //public IActionResult ChangeDate([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        //{
+        //    if (schedule != null && (schedule.StartDay == null || schedule.EndDay == null) && schedule.AllDay == false)
+        //    {
+        //        return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
+        //    }
 
-            return Json(new { warning = false });
-        }
+        //    return Json(new { warning = false });
+        //}
 
-        public IActionResult OverStartTime([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        {
-            if (schedule != null && (schedule.StartDay > schedule.EndDay))
-            {
-                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
-            }
-            return Json(new { warning = false });
-        }
+        //public IActionResult OverStartTime([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        //{
+        //    if (schedule != null && (schedule.StartDay > schedule.EndDay))
+        //    {
+        //        return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
+        //    }
+        //    return Json(new { warning = false });
+        //}
 
         // GET: Schedules/Delete/5
         public async Task<IActionResult> Delete(Guid? id)

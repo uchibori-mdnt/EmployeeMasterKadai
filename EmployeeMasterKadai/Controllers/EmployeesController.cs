@@ -68,30 +68,30 @@ namespace EmployeeMasterKadai.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult DateInPast([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
-        {
-            if (employeeList.RetirementDay != null)
-            {
-                if (employeeList.RetirementDay > DateTime.Today)
-                {
-                    return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
-                }
-            }
+        //[HttpPost]
+        //public IActionResult DateInPast([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
+        //{
+        //    if (employeeList.RetirementDay != null)
+        //    {
+        //        if (employeeList.RetirementDay > DateTime.Today)
+        //        {
+        //            return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
+        //        }
+        //    }
 
-            return Json(new { warning = false });
-        }
+        //    return Json(new { warning = false });
+        //}
 
-        [HttpPost]
-        public IActionResult IfTimesNull([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
-        {
-            if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
-            {
-                return Json(new { warning = true, message = "退職日を入力してください。" });
-            }
+        //[HttpPost]
+        //public IActionResult IfTimesNull([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
+        //{
+        //    if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
+        //    {
+        //        return Json(new { warning = true, message = "退職日を入力してください。" });
+        //    }
 
-            return Json(new { warning = false });
-        }
+        //    return Json(new { warning = false });
+        //}
 
         // GET: EmployeeLists/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
@@ -114,7 +114,7 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt")] Employee employeeList)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
         {
 
             var existingRecord = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);

@@ -150,7 +150,7 @@
 <script src="~/js/Common.js"></script>
 
 <script>
-
+    var all;
     $(document).ready(function () {
         
         $('.editModal').on('click', function (e) {
@@ -158,7 +158,7 @@
             $('#externalModal').modal('show');
 
             var itemId = $(this).data('id');
-            var all = $(this).data('all');
+            all = $(this).data('all');
 
             $.ajax({
                 url: '/Schedules/Edit/' + itemId,
@@ -204,15 +204,21 @@
 
         //既存の終日チェック確認
         function setAllDayChecked(allDay) {
+                console.log(allDay);
+                if (allDay === undefined || allDay === null || allDay === "False") {
+                allDay = false;
+            }
             var allDayFlagString = allDay.toString();
+
             var startTimeBox = $('#startTimeBox');
             var endTimeBox = $('#endTimeBox');
 
-            if (allDayFlagString === "False") {
+            if (allDayFlagString === "false") {
                 $('#startTime').prop('readonly', false);
                 startTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
                 endTimeBox.find('input').prop('disabled', false).removeAttr('readonly').css('background-color', '#ffffff');
-            } else {
+            } 
+            else {
                 $('#startTime').prop('readonly', true);
                 startTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2');
                 endTimeBox.find('input').prop('disabled', true).attr('readonly', true).css('background-color', '#f2f2f2');
@@ -248,7 +254,21 @@
             document.getElementById('endDate').value = formattedDate;
         }
 
-        var initForm = (AllDay) => {
+            //終日（AllDay）がfalseでエラーになった場合、trueに変えてもfalseでとうろくされてしまう/changeAllDayCheckedのcheckはtrueになってる
+            function reSaveSchedule(all) {
+                setAllDayChecked(all);
+
+                $('#AllDay').on('change', function () {
+                    changeAllDayChecked(this);
+                });
+
+                scheduleTime();
+                initForm()
+            }
+
+
+
+        var initForm = () => {
             const $form = $('#modalContentPlaceholder').find('form');         
 
             $.validator.unobtrusive.parse($form);
@@ -260,51 +280,52 @@
                     showErrorModal();
                     return false;
                 }
-                    Promise.all([
-                        $.ajax({
-                            type: 'post',
-                            url: '/Schedules/SameSchedule',
-                            data: $form.serialize(),
-                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                        }),
-                        $.ajax({
-                            type: 'post',
-                            url: '/Schedules/ChangeDate',
-                            data: $form.serialize(),
-                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                        }),
-                        $.ajax({
-                            type: 'post',
-                            url: '/Schedules/SameDay',
-                            data: $form.serialize(),
-                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                        }),
-                        $.ajax({
-                            type: 'post',
-                            url: '/Schedules/OverStartTime',
-                            data: $form.serialize(),
-                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
 
-                        })
-                    ]).then(([sameScheduleResponse, changeDateResponse, sameDayResponse, overStartTimeResponse]) => {
+                    // Promise.all([
+                    //     $.ajax({
+                    //         type: 'post',
+                    //         url: '/Schedules/SameSchedule',
+                    //         data: $form.serialize(),
+                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                    //     }),
+                    //     $.ajax({
+                    //         type: 'post',
+                    //         url: '/Schedules/ChangeDate',
+                    //         data: $form.serialize(),
+                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                    //     }),
+                    //     $.ajax({
+                    //         type: 'post',
+                    //         url: '/Schedules/SameDay',
+                    //         data: $form.serialize(),
+                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                    //     }),
+                    //     $.ajax({
+                    //         type: 'post',
+                    //         url: '/Schedules/OverStartTime',
+                    //         data: $form.serialize(),
+                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
 
-                        if (sameScheduleResponse.warning) {
-                            if (confirm(sameScheduleResponse.message) === false) {
-                                return;
-                            }
-                        }
-                        if (sameDayResponse.warning) {
-                            serverErrorModal(sameDayResponse.message)
-                            return;                      
-                        }
-                        if (changeDateResponse.warning) {
-                            serverErrorModal(changeDateResponse.message)
-                            return;                                                        
-                        }
-                        if (overStartTimeResponse.warning) {
-                            serverErrorModal(overStartTimeResponse.message)
-                            return;                          
-                        }
+                    //     })
+                    // ]).then(([sameScheduleResponse, changeDateResponse, sameDayResponse, overStartTimeResponse]) => {
+
+                    //     if (sameScheduleResponse.warning) {
+                    //         if (confirm(sameScheduleResponse.message) === false) {
+                    //             return;
+                    //         }
+                    //     }
+                    //     if (sameDayResponse.warning) {
+                    //         serverErrorModal(sameDayResponse.message)
+                    //         return;                      
+                    //     }
+                    //     if (changeDateResponse.warning) {
+                    //         serverErrorModal(changeDateResponse.message)
+                    //         return;                                                        
+                    //     }
+                    //     if (overStartTimeResponse.warning) {
+                    //         serverErrorModal(overStartTimeResponse.message)
+                    //         return;                          
+                    //     }
 
 
                         var callback = function () {
@@ -319,7 +340,9 @@
                                 }
                                 else {
                                     $('#modalContentPlaceholder').html(data);
-                                    showErrorModal();
+                                    all = $(this).data('all');
+                                    setupTime();
+                                    reSaveSchedule(all);
                                 }
                             });
                         };
@@ -331,7 +354,7 @@
                             showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
                         }
                     });                
-                });
+                //});
             };        
         });
 

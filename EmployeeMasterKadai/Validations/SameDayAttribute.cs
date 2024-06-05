@@ -7,7 +7,7 @@ namespace EmployeeMasterKadai.Validations
     {
         protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
-            if (validationContext.ObjectInstance is Schedule model && model.StartDay != null && model.EndDay != null && model.StartDay == model.EndDay)
+            if (validationContext.ObjectInstance is Schedule model && model.StartDay != null && model.EndDay != null && model.StartDay == model.EndDay && model.AllDay == false)
             {
                 return new ValidationResult("開始時刻と終了時刻が同じになっています。");
             }

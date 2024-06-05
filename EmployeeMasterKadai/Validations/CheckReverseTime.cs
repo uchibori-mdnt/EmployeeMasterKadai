@@ -9,7 +9,7 @@ namespace EmployeeMasterKadai.Validations
         {
             var schedule = validationContext.ObjectInstance as Schedule;
 
-            if (schedule != null && (schedule.StartDay > schedule.EndDay) && schedule.AllDay == false)
+            if (schedule != null && (schedule.StartDay > schedule.EndDay) && schedule.AllDay == false || schedule.AllDay == true && (schedule.StartDay > schedule.EndDay))
             {
              
                 return new ValidationResult(FormatErrorMessage(""));

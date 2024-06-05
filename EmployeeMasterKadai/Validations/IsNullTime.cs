@@ -3,7 +3,7 @@ using EmployeeMasterKadai.Models;
 
 namespace EmployeeMasterKadai.Validations
 {
-    public class IsTimesNull : ValidationAttribute
+    public class IsNullTime : ValidationAttribute
     {　
         protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {

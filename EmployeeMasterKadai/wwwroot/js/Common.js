@@ -171,8 +171,8 @@ function showConfirmationModal(action, message, callback) {
             callback();
         }
         else if (checkedButtonValue === "いいえ") {
-            $('#messageModal').modal('hide');
         }
+            $('#messageModal').modal('hide');
     });
 }
 

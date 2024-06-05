@@ -186,6 +186,17 @@
                 }
             }
 
+            function reSave(){
+                console.log("reSaveにきた")
+
+                setFlagChecked(retirementFlag);
+
+                $('#retirementFlag').on('change', function () {
+                    changeFlagChecked(this);
+                });
+                initForm()
+            }
+
             var initForm = (retirementFlag) => {
                 const $form = $('#modalContentPlaceholder').find('form');
 
@@ -199,30 +210,30 @@
                         showErrorModal();
                          return false; 
                     }
+                    console.log("initFormにきた")
+                        // Promise.all([
+                        //     $.ajax({
+                        //         type: 'post',
+                        //         url: '/Employees/DateInPast',
+                        //         data: $form.serialize(),
+                        //         contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        //     }),
+                        //     $.ajax({
+                        //         type: 'post',
+                        //             url: '/Employees/IfTimesNull',
+                        //         data: $form.serialize(),
+                        //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        //     })
+                        //  ]).then(([dateInPastResponse, ifTimesNullResponse]) => {
 
-                        Promise.all([
-                            $.ajax({
-                                type: 'post',
-                                url: '/Employees/DateInPast',
-                                data: $form.serialize(),
-                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                            }),
-                            $.ajax({
-                                type: 'post',
-                                    url: '/Employees/IfTimesNull',
-                                data: $form.serialize(),
-                                contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                            })
-                         ]).then(([dateInPastResponse, ifTimesNullResponse]) => {
-
-                            if (dateInPastResponse.warning) {
-                                serverErrorModal(dateInPastResponse.message);
-                                return;
-                            }
-                            if (ifTimesNullResponse.warning) {
-                                serverErrorModal(ifTimesNullResponse.message);
-                                return;
-                            }
+                        //     if (dateInPastResponse.warning) {
+                        //         serverErrorModal(dateInPastResponse.message);
+                        //         return;
+                        //     }
+                        //     if (ifTimesNullResponse.warning) {
+                        //         serverErrorModal(ifTimesNullResponse.message);
+                        //         return;
+                        //     }
 
 
                         var callback = function () {
@@ -236,9 +247,9 @@
                                     location.reload();
                                 }
                                 else {
-                                    $('#modalContentPlaceholder').html(data);
-                                    showErrorModal();
-                            }
+                                    $('#modalContentPlaceholder').html(data);                       
+                                    reSave();
+                                }
                             });
                         };
 
@@ -249,7 +260,7 @@
                             showConfirmationModal('/Employees/Update', '更新します。よろしいですか？', callback);
                         }
                     });
-                });
+                //});
             };
         });
     </script>
