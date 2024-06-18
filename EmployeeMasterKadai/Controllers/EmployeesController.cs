@@ -68,30 +68,31 @@ namespace EmployeeMasterKadai.Controllers
             }
         }
 
-        //[HttpPost]
-        //public IActionResult DateInPast([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
-        //{
-        //    if (employeeList.RetirementDay != null)
-        //    {
-        //        if (employeeList.RetirementDay > DateTime.Today)
-        //        {
-        //            return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
-        //        }
-        //    }
+        [HttpPost]
+        public IActionResult ErrorCheck([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
+        {
+            if (employeeList.Name == null)
+            {
+                return Json(new { warning = true, message = "社員名を入力してください。" });
+            }
+            if (employeeList.Department == null)
+            {
+                return Json(new { warning = true, message = "部署を入力してください。" });
+            }
+            if (employeeList.RetirementDay != null)
+            {
+                if (employeeList.RetirementDay > DateTime.Today)
+                {
+                    return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
+                }
+            }
+            if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
+            {
+                return Json(new { warning = true, message = "退職日を入力してください。" });
+            }
 
-        //    return Json(new { warning = false });
-        //}
-
-        //[HttpPost]
-        //public IActionResult IfTimesNull([Bind("Name,Department,RetirementFlag,RetirementDay,CreatedAt,UpdatedAt")] Employee employeeList)
-        //{
-        //    if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
-        //    {
-        //        return Json(new { warning = true, message = "退職日を入力してください。" });
-        //    }
-
-        //    return Json(new { warning = false });
-        //}
+            return Json(new { warning = false });
+        }
 
         // GET: EmployeeLists/Edit/5
         public async Task<IActionResult> Edit(Guid? id)

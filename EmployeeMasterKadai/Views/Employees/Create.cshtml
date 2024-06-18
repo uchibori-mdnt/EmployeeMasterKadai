@@ -1,7 +1,7 @@
 ﻿@model EmployeeMasterKadai.Models.Employee
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "社員マスタ登録";
 }
 
 <div>
@@ -32,7 +32,7 @@
         <div id="stylInputDay" >
             <div class="form-group" id="retirementDayInput">
                 <label asp-for="RetirementDay" class="control-label"></label>
-                <input asp-for="RetirementDay" class="form-control" type="date"  disabled />
+                <input asp-for="RetirementDay" id="retirementDay" class="form-control" type="date"  disabled />
                 <span asp-validation-for="RetirementDay" class="text-danger"></span>
             </div>
         </div>

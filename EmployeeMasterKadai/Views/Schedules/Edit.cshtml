@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "スケジュール編集";
 }
 
 <div>
@@ -19,7 +19,19 @@
         <div class="form-group">
             <label asp-for="Organizer" class="control-label"></label>
             <div class="col-sm-10">
-                @Html.DropDownListFor(model => model.Organizer, new SelectList(ViewBag.People), "選択してください", new { @class = "form-control" })
+                @{
+                    var employees = new List<SelectListItem>();
+
+                    foreach (var employee in ViewBag.People)
+                    {
+                        employees.Add(new SelectListItem
+                        {
+                            Value = employee.Id.ToString(),
+                            Text = employee.Name
+                        });
+                    }
+                }
+                @Html.DropDownListFor(model => model.Organizer, employees, "選択してください", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -43,10 +55,10 @@
             <label asp-for="StartDay" class="control-label"></label>
             <div class="row g-0">
                 <div class="col-md-6">
-                    <input id="startDate" class="form-control" type="date" />
+                    <input id="startDate" name="startDate" class="form-control" type="date" />
                 </div>
                 <div id="startTimeBox" class="col-md-6">
-                    <input id="startTime" type="text" list="data-list" class="form-control" autocomplete="off" />
+                    <input id="startTime" name="startTime" type="text" list="data-list" class="form-control" autocomplete="off" />
                 </div>
             </div>
                 <datalist id="data-list"></datalist>
@@ -58,10 +70,10 @@
             <label asp-for="EndDay" class="control-label"></label>
             <div class="row g-0">
                 <div class="col-md-6">
-                    <input id="endDate" class="form-control" type="date" />
+                    <input id="endDate" name="endDate" class="form-control" type="date" />
                 </div>
                 <div id="endTimeBox" class="col-md-6">
-                    <input id="endTime" type="text" list="data-list" class="form-control" />
+                    <input id="endTime" name="endTime" type="text" list="data-list" class="form-control" />
                 </div>
             </div>
                 <datalist id="data-list"></datalist>
@@ -73,20 +85,19 @@
             <label asp-for="JoinPeople" class="control-label">参加者</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
                 @{
-                    HashSet<Guid> selectedEmployeeIds = new HashSet<Guid>(Model.JoinPeople);
+                    //編集しようとしたデータの参加者一覧
+                    HashSet<Guid> selectJoinPeopleLists = new HashSet<Guid>(Model.JoinPeople);
                 }
 
-                @foreach (var employeeId in ViewBag.JoinPeople)
-                {
-                    var isChecked = selectedEmployeeIds.Contains(employeeId);
-                    var employees = ViewBag.EmployeeContext as IEnumerable<Employee>;
-                    var employee = employees.FirstOrDefault(e => e.Id == employeeId);
+                @foreach (var employee in ViewBag.People)
+                { //ViewVagは社員マスタの社員一覧が乗っている
+                    bool isChecked = selectJoinPeopleLists != null && selectJoinPeopleLists.Contains(employee.Id);
 
                     <div class="form-check ml-2">
-                        <input type="checkbox" id="@("checkbox_" + employee.Id)" name="selectedEmployeeNames" value="@employee.Name" class="form-check-input" @(isChecked ? "checked" : "") />
+                        <input type="checkbox" id="@("checkbox_" + employee.Id)" name="selectedEmployeeIds" value="@employee.Id" class="form-check-input" @(isChecked ? "checked" : "") />
                         <label class="form-check-label" for="@("checkbox_" + employee.Id)">@employee.Name</label>
                     </div>
-                }             
+                }  
             </div>
         </div>
     </form>

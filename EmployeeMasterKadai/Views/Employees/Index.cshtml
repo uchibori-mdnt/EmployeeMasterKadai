@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EmployeeMasterKadai.Models.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "社員マスタ";
 }
 
 <!-- 追加モーダルを表示するボタン -->
@@ -165,15 +165,19 @@
                 }
             }
 
-            function changeFlagChecked(check) {
-                var retirementFlagChecked = $(check).prop('checked');
-                var retirementDayInput = $('#retirementDayInput input[type="date"]');
-
+            function getFormattedDate() {
                 var today = new Date();
                 var year = today.getFullYear();
                 var month = String(today.getMonth() + 1).padStart(2, '0');
                 var day = String(today.getDate()).padStart(2, '0');
-                var formattedDate = year + '-' + month + '-' + day;
+                return year + '-' + month + '-' + day;
+            }
+
+            function changeFlagChecked(check) {
+                var retirementFlagChecked = $(check).prop('checked');
+                var retirementDayInput = $('#retirementDayInput input[type="date"]');
+
+                var formattedDate = getFormattedDate();
 
                 if (retirementFlagChecked) {
                     retirementDayInput.prop('disabled', false);
@@ -187,8 +191,6 @@
             }
 
             function reSave(){
-                console.log("reSaveにきた")
-
                 setFlagChecked(retirementFlag);
 
                 $('#retirementFlag').on('change', function () {
@@ -196,6 +198,23 @@
                 });
                 initForm()
             }
+
+            //クライアントサイド入力チェック
+            const isValid = (retirementDay, retirementFlag) => {
+                let message = "";
+                var formattedDate = getFormattedDate();
+
+                if (retirementDay > formattedDate) {
+                    return "退職日は本日以前の日付を入力してください。";
+                }
+
+                if (!retirementDay && retirementFlag == true) {
+                    message += "退職日を入力してください。";
+                }
+                return message || null;
+            };
+
+            var savedata = null;
 
             var initForm = (retirementFlag) => {
                 const $form = $('#modalContentPlaceholder').find('form');
@@ -210,57 +229,64 @@
                         showErrorModal();
                          return false; 
                     }
-                    console.log("initFormにきた")
-                        // Promise.all([
-                        //     $.ajax({
-                        //         type: 'post',
-                        //         url: '/Employees/DateInPast',
-                        //         data: $form.serialize(),
-                        //         contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                        //     }),
-                        //     $.ajax({
-                        //         type: 'post',
-                        //             url: '/Employees/IfTimesNull',
-                        //         data: $form.serialize(),
-                        //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                        //     })
-                        //  ]).then(([dateInPastResponse, ifTimesNullResponse]) => {
 
-                        //     if (dateInPastResponse.warning) {
-                        //         serverErrorModal(dateInPastResponse.message);
-                        //         return;
-                        //     }
-                        //     if (ifTimesNullResponse.warning) {
-                        //         serverErrorModal(ifTimesNullResponse.message);
-                        //         return;
-                        //     }
+                    const retirementDay = document.getElementById('retirementDay').value
+                    const retirementFlag = document.getElementById('retirementFlag').checked;
+
+                    const validationMessage = isValid(retirementDay, retirementFlag);
+                     
+                    if (validationMessage) {
+                        showErrorModal();
+                        serverErrorModal(validationMessage);
+                        initForm();
+                    }
 
 
-                        var callback = function () {
-                            $.ajax({
-                                type: 'post',
-                                url: $form.attr('action'), 
-                                data: $form.serialize(), 
-                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                            }).done((data) => {
-                                if (data.success) {
-                                    location.reload();
-                                }
-                                else {
-                                    $('#modalContentPlaceholder').html(data);                       
-                                    reSave();
-                                }
-                            });
-                        };
+                    var callback = function () {
+                        $.ajax({
+                            type: 'post',
+                            url: $form.attr('action'), 
+                            data: $form.serialize(), 
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        }).done((data) => {
+                            if (data.success) {
+                                location.reload();
+                            }
+                            else {
+                                $('#modalContentPlaceholder').html(data);                       
+                                reSave();
+                            }
+                        });
+                    };
 
+                    savedata = function () {
                         if ($form.attr('action') === '/Employees/Create') {
                             showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？', callback);
                         } 
                         else {
                             showConfirmationModal('/Employees/Update', '更新します。よろしいですか？', callback);
                         }
-                    });
-                //});
+                    }
+                    if (!validationMessage) {
+                        Promise.all([
+                            $.ajax({
+                                type: 'post',
+                                url: '/Employees/ErrorCheck',
+                                data: $form.serialize(),
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                            })
+                        ]).then(([errorCheckResponse]) => {
+
+                            if (errorCheckResponse.warning) {
+                                serverErrorModal(errorCheckResponse.message);
+                                initForm();
+                            }
+
+                            savedata();
+                        });
+                    
+                    }
+                });
             };
         });
     </script>

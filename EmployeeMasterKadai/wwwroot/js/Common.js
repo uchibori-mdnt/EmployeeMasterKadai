@@ -192,14 +192,34 @@ function showErrorModal() {
     });
 }
 
+function scheduleErrorModal(message, savedata) {
+    $('#scheduleModal').modal('show');
+    $('#scheduleLavel').text('確認');
+    $('#scheduleBody').text(message);
+    $('#scheduleBtn').html(checkButtonHtml);
+
+    $('#scheduleBtn').on('click', 'input[type="submit"]', function () {
+        var checkedButtonValue = $(this).val();
+        if (checkedButtonValue === "はい") {
+            $('#scheduleModal').modal('hide');
+            savedata();
+        }
+        else if (checkedButtonValue === "いいえ") {
+            $('#scheduleModal').modal('hide');
+        }
+    });
+}
+
+
 
 function serverErrorModal(message) {
+
     $('#messageModal').modal('show');
-    $('#messageLavel').text('確認');
+    $('#messageLavel').text('入力チェック');
     $('#modalBody').text(message);
     $('#closeModalBtn').html(yesButtonHtml);
 
-    $('#closeModalBtn').on('click', 'input[type="submit"]', function () {
+    $('#closeModalBtn').off('click').on('click', 'input[type="submit"]', function () {
         var checkedButtonValue = $(this).val();
         if (checkedButtonValue === "もう一度入力") {
             $('#messageModal').modal('hide');

@@ -2,7 +2,7 @@
 @using EmployeeMasterKadai.Models
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "スケジュール";
 }
 
 <!-- 追加モーダルを表示するボタン -->
@@ -41,7 +41,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Organizer)
+                @{
+                    var employeeLists = ViewBag.EmployeeContext as IEnumerable<Employee>;
+                    var organizerId = Guid.Parse(item.Organizer);
+                    var selectEmployee = employeeLists.FirstOrDefault(e => e.Id == organizerId);
+
+                    if (selectEmployee != null)
+                    {
+                            <div>@selectEmployee.Name</div>
+                    }
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -61,11 +70,11 @@
 
                             if (startTimeValue != "00:00")
                             {
-                                @Html.DisplayFor(modelItem => item.StartDay)
+                                    @Html.DisplayFor(modelItem => item.StartDay)
                             }
                             else
                             {
-                                @Html.DisplayFor(modelItem => startDayValue)
+                                    @Html.DisplayFor(modelItem => startDayValue)
                             }
                         }
                     }
@@ -79,11 +88,11 @@
 
                             if (endTimeValue != "00:00")
                             {
-                                @Html.DisplayFor(modelItem => item.EndDay)
+                                    @Html.DisplayFor(modelItem => item.EndDay)
                             }
                             else
                             {
-                                @Html.DisplayFor(modelItem => endDayValue)
+                                    @Html.DisplayFor(modelItem => endDayValue)
                             }
                         }
                     }
@@ -138,6 +147,20 @@
             </div>
             <div class="modal-body pt-5 pb-5 fw-bold fs-6" id="modalBody"></div>
             <div class="modal-footer p-1" id="closeModalBtn"></div>
+        </div>
+    </div>
+</div>
+
+@* スケジュールエラーのモーダルウィンドウ *@
+<div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #f5f5f5 ">
+            <div class="modal-header">
+                <div class="modal-title fs-5" id="scheduleLavel"></div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-5 pb-5 fw-bold fs-6" id="scheduleBody"></div>
+            <div class="modal-footer p-1" id="scheduleBtn"></div>
         </div>
     </div>
 </div>
@@ -240,6 +263,25 @@
             }
         }
 
+        //クライアントサイド入力チェック
+            const isValid = (startDateValue, startTimeValue, endDateValue, endTimeValue, allDay) => {
+            let message = "";
+
+                if ((!startTimeValue || !endTimeValue) && allDay === false) {
+            return "開始時刻と終了時刻を入力してください。";
+            }
+
+            if ((startDateValue > endDateValue && allDay === true) || (startDateValue == endDateValue && startTimeValue > endTimeValue && allDay === false)) {
+            message += "開始時刻が終了時刻を超えることはできません。";
+            }
+
+            if ((startDateValue > endDateValue && allDay === true) || (startDateValue == endDateValue && startTimeValue == endTimeValue && allDay === false)) {
+            message += "開始時刻と終了時刻が同じになっています。";
+            }
+
+            return message || null;
+        };
+
         function setupTime() {
             var today = new Date();
             var year = today.getFullYear();
@@ -252,19 +294,18 @@
             document.getElementById('endDate').value = formattedDate;
         }
 
-            //AllDayにチェックをしてサーバーエラーになった場合、強制的にfalseになっているため、チェックはついているのに時間が入力できる状態になる
-            function reSaveSchedule() {
-                $('#AllDay').prop('checked', false);
+        function reSaveSchedule() {
+            $('#AllDay').prop('checked', false);
 
-                $('#AllDay').on('change', function () {
-                    changeAllDayChecked(this);
-                });
+            $('#AllDay').on('change', function () {
+                changeAllDayChecked(this);
+            });
 
-                scheduleTime();
-                initForm()
-            }
+            scheduleTime();
+            initForm()
+        }
 
-
+        var savedata = null;
 
         var initForm = () => {
             const $form = $('#modalContentPlaceholder').find('form');         
@@ -277,90 +318,84 @@
                 if (!$form.valid()) {
                     showErrorModal();
                     return false;
-                }
+                 }
 
-                    // Promise.all([
-                    //     $.ajax({
-                    //         type: 'post',
-                    //         url: '/Schedules/SameSchedule',
-                    //         data: $form.serialize(),
-                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                    //     }),
-                    //     $.ajax({
-                    //         type: 'post',
-                    //         url: '/Schedules/ChangeDate',
-                    //         data: $form.serialize(),
-                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                    //     }),
-                    //     $.ajax({
-                    //         type: 'post',
-                    //         url: '/Schedules/SameDay',
-                    //         data: $form.serialize(),
-                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-                    //     }),
-                    //     $.ajax({
-                    //         type: 'post',
-                    //         url: '/Schedules/OverStartTime',
-                    //         data: $form.serialize(),
-                    //         contentType: 'application/x-www-form-urlencoded; charset=utf-8'
-
-                    //     })
-                    // ]).then(([sameScheduleResponse, changeDateResponse, sameDayResponse, overStartTimeResponse]) => {
-
-                    //     if (sameScheduleResponse.warning) {
-                    //         if (confirm(sameScheduleResponse.message) === false) {
-                    //             return;
-                    //         }
-                    //     }
-                    //     if (sameDayResponse.warning) {
-                    //         serverErrorModal(sameDayResponse.message)
-                    //         return;                      
-                    //     }
-                    //     if (changeDateResponse.warning) {
-                    //         serverErrorModal(changeDateResponse.message)
-                    //         return;                                                        
-                    //     }
-                    //     if (overStartTimeResponse.warning) {
-                    //         serverErrorModal(overStartTimeResponse.message)
-                    //         return;                          
-                    //     }
+            // 開始日と開始時刻の値を取得
+            const startDateValue = document.getElementById('startDate').value;
+            const startTimeValue = document.getElementById('startTime').value;
+            const endDateValue = document.getElementById('endDate').value;
+            const endTimeValue = document.getElementById('endTime').value;
+            const allDay = document.getElementById('AllDay').checked;
 
 
-                        var callback = function () {
-                            $.ajax({
-                                type: 'post',
-                                url: $form.attr('action'),
-                                data: $form.serialize(),
-                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                            }).done((data) => {
-                                if (data.success) {
-                                    location.reload();
-                                }
-                                else {
-                                    $('#modalContentPlaceholder').html(data);
+
+            const validationMessage = isValid(startDateValue, startTimeValue, endDateValue, endTimeValue, allDay);
+
+            if (validationMessage) {
+                showErrorModal();
+                serverErrorModal(validationMessage);
+                initForm();
+            }
+
+
+            var callback = function () {
+                $.ajax({
+                    type: 'post',
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                }).done((data) => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                    else {
+                        $('#modalContentPlaceholder').html(data);
   
-                                    setupTime();
-                                    reSaveSchedule();
-                                }
-                            });
-                        };
+                        setupTime();
+                        reSaveSchedule();
+                    }
+                });
+            };
 
+            savedata = function() {
+                if ($form.attr('action') === '/Schedules/Create') {
+                    showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？', callback);
+                }
+                else {
+                    showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
+                }
+            }
+                if (!validationMessage) {
+                    Promise.all([
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/ErrorCheck',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        }),
+                        $.ajax({
+                            type: 'post',
+                            url: '/Schedules/SameSchedule',
+                            data: $form.serialize(),
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+                        })
+                    ]).then(([errorCheckResponse, sameScheduleResponse]) => {
 
-
-
-
-
-                        if ($form.attr('action') === '/Schedules/Create') {
-                            showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？', callback);
+                        if (errorCheckResponse.warning) {
+                            serverErrorModal(errorCheckResponse.message);
+                            return;
                         }
-                        else {
-                            showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
+                        if (sameScheduleResponse.warning) {
+                            scheduleErrorModal(sameScheduleResponse.message, savedata);
+                            return;
                         }
+
+                        savedata();
                     });                
-                //});
+                }
+                });
             };        
         });
-
 </script>
 }
 

@@ -2,7 +2,7 @@
 @using EmployeeMasterKadai.Models
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "スケジュール登録";
 }
 
 <div>
@@ -15,10 +15,17 @@
         </div>
         <div class="form-group">
             <label asp-for="Organizer" class="control-label"></label>
-            <div>
-                @Html.DropDownListFor(model => model.Organizer, new SelectList(ViewBag.People), "選択してください", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
+            @{
+                var selectList = new SelectList(ViewBag.People, "Id", "Name");
+            }
+
+            <div class="form-group">
+                <div>
+                    @Html.DropDownListFor(model => model.Organizer, selectList, "選択してください", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
+                </div>
             </div>
+
         </div>
 
         <div class="form-group">
@@ -75,9 +82,9 @@
                 @foreach (var employee in ViewBag.People)
                 {
                     <div class="form-check ml-2">
-                        <input type="checkbox" id="@("checkbox_" + employee)" name="selectedEmployeeNames" value="@employee" class="form-check-input" />
-                        <label class="form-check-label" for="@("checkbox_" + employee)">@employee</label>
-                    </div>
+                <input type="checkbox" id="@("checkbox_" + employee.Id)" name="selectedEmployeeIds" value="@employee.Id" class="form-check-input" />
+                <label class="form-check-label" for="@("checkbox_" + employee.Id)">@employee.Name</label>
+            </div>
                 }
             </div>
             <span asp-validation-for="JoinPeople" class="text-danger"></span>

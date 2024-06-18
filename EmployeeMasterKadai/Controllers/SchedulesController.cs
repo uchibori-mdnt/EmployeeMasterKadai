@@ -49,21 +49,19 @@ namespace EmployeeMasterKadai.Controllers
 
         public IActionResult Create()
         {
-            // 有効な従業員のIDを取得
-            var validEmployeeIds = _context.Employees
+            // 有効な従業員のIDと名前を取得
+            var employees = _context.Employees
                 .Where(e => !e.RetirementFlag)
-                .Select(e => e.Id)
-                .ToArray();
-
-            // ViewBagに従業員の名前を追加
-            ViewBag.People = _context.Employees
-                .Where(e => validEmployeeIds.Contains(e.Id))
-                .Select(e => e.Name)
+                .Select(e => new { e.Id, e.Name })
                 .ToList();
 
-            var model = new Schedule();
+            // ViewBagに従業員のIDと名前を追加
+            ViewBag.People = employees;
 
+            var model = new Schedule();
             return PartialView(model);
+
+   
         }
 
         // POST: Schedules/Create
@@ -72,15 +70,13 @@ namespace EmployeeMasterKadai.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
+        public async Task<IActionResult> Create([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeIds)
         {
             if (ModelState.IsValid)
             {
-                var selectedEmployeeIds = _context.Employees
-                    .Where(e => selectedEmployeeNames.Contains(e.Name))
-                    .Select(e => e.Id)
-                    .ToArray();
-                schedule.JoinPeople = selectedEmployeeIds;
+                var selectedEmployeeGuids = selectedEmployeeIds.Select(id => Guid.Parse(id)).ToArray();
+                schedule.JoinPeople = selectedEmployeeGuids;
+
 
                 schedule.CreateDate = DateTime.Now;
                 schedule.UpdatedDate = DateTime.Now;
@@ -92,11 +88,13 @@ namespace EmployeeMasterKadai.Controllers
             }
             else
             {
-                // バリデーションエラー時にも従業員の名前をViewBagに追加して返す
-                ViewBag.People = _context.Employees
+                // バリデーションエラー時にも従業員のIDと名前をViewBagに追加して返す
+                var employees = _context.Employees
                     .Where(e => !e.RetirementFlag)
-                    .Select(e => e.Name)
+                    .Select(e => new { e.Id, e.Name })
                     .ToList();
+
+                ViewBag.People = employees;
                 return PartialView("Create", schedule);
             }
         }
@@ -114,24 +112,16 @@ namespace EmployeeMasterKadai.Controllers
             {
                 return NotFound();
             }
-            // 有効な従業員のIDを取得
-            var validEmployeeIds = _context.Employees
-                .Where(e => !e.RetirementFlag)
-                .Select(e => e.Id)
-                .ToArray();
 
-            // ViewBagに従業員の名前を追加
-            ViewBag.People = _context.Employees
-                .Where(e => validEmployeeIds.Contains(e.Id))
-                .Select(e => e.Name)
+
+            // 有効な従業員のIDと名前を取得
+            var employees = _context.Employees
+                .Where(e => !e.RetirementFlag)
+                .Select(e => new { e.Id, e.Name })
                 .ToList();
 
-            ViewBag.JoinPeople = _context.Employees
-                .Where(e => !e.RetirementFlag)
-                .Select(e => e.Id)
-                .ToArray();
-
-            ViewBag.EmployeeContext = _context.Employees;
+            // ViewBagに従業員のIDと名前を追加
+            ViewBag.People = employees;
 
             return PartialView(schedule);
         }
@@ -141,7 +131,7 @@ namespace EmployeeMasterKadai.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople,CreateAt")] Schedule schedule, string[] selectedEmployeeNames)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople,CreateAt")] Schedule schedule, Guid[] selectedEmployeeIds)
         {
             var foundScheduleData = await _context.Schedules.FirstOrDefaultAsync(e => e.Id == id);
 
@@ -154,10 +144,7 @@ namespace EmployeeMasterKadai.Controllers
             {
                 try
                 {
-                    var selectedEmployeeIds = _context.Employees
-                   .Where(e => selectedEmployeeNames.Contains(e.Name))
-                   .Select(e => e.Id)
-                   .ToArray();
+
                     schedule.JoinPeople = selectedEmployeeIds;
 
                     foundScheduleData.Organizer = schedule.Organizer;
@@ -194,78 +181,66 @@ namespace EmployeeMasterKadai.Controllers
             }
         }
 
-        //[HttpPost]
-        //public IActionResult SameSchedule([Bind("Id,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, string[] selectedEmployeeNames)
-        //{
-        //    if(selectedEmployeeNames != null)
-        //    {
-        //        foreach (var employeeName in selectedEmployeeNames)
-        //        {
-        //            var employeeId = _context.Employees.FirstOrDefault(x => x.Name == employeeName);
-        //            var joinPeople = employeeId.Id;
+        [HttpPost]
+        public IActionResult SameSchedule([Bind("Id,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule, Guid[] selectedEmployeeIds)
+        {
+            if (selectedEmployeeIds != null)
+            {
+                foreach (var employeeId in selectedEmployeeIds)
+                {
+                    var pickEmployeeId = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
 
-        //            foreach (var pickSchedule in _context.Schedules)
-        //            {
-        //                if (schedule.Id != pickSchedule.Id && pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(joinPeople))
-        //                {
-        //                    var startDate = pickSchedule.StartDay;
-        //                    var endDate = pickSchedule.EndDay;
+                    foreach (var pickSchedule in _context.Schedules)
+                    {
+                        if (schedule.Id != pickSchedule.Id && pickSchedule.JoinPeople != null && pickSchedule.JoinPeople.Contains(pickEmployeeId.Id))
+                        {
+                            var startDate = pickSchedule.StartDay;
+                            var endDate = pickSchedule.EndDay;
 
-        //                    if (!schedule.AllDay && !pickSchedule.AllDay)
-        //                    {
-        //                        if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) || (endDate >= schedule.EndDay && schedule.EndDay >= schedule.StartDay))
-        //                        {
-        //                            return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        if ((schedule.AllDay || pickSchedule.AllDay) && schedule.StartDay == pickSchedule.StartDay && schedule.EndDay == pickSchedule.EndDay)
-        //                        {
-        //                            return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-            
-        //    return Json(new { warning = false});
-        //}
+                            if (!schedule.AllDay && !pickSchedule.AllDay)
+                            {
+                                if ((startDate <= schedule.StartDay && schedule.StartDay <= endDate) || (startDate <= schedule.EndDay && schedule.EndDay <= endDate) ||
+                                    (schedule.StartDay <= startDate && startDate <= schedule.EndDay) || (schedule.StartDay <= endDate && endDate <= schedule.EndDay) ||
+                                    (startDate <= schedule.StartDay && schedule.EndDay <= endDate) || (schedule.StartDay <= startDate && endDate <= schedule.EndDay))
+                                {
+                                    return Json(new { warning = true, message = "スケジュールが重複している社員がいます。よろしいですか？" });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-        //[HttpPost]
-        //public IActionResult SameDay([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        //{
+            return Json(new { warning = false });
+        }
 
-        //    if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false)
-        //    {
-        //        return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
-        //    }
+        [HttpPost]
+        public IActionResult ErrorCheck([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
+        {
+            if (schedule.Organizer == null)
+            {
+                return Json(new { warning = true, message = "件名は必須です。" });
+            }
+            if (schedule.Title == null)
+            {
+                return Json(new { warning = true, message = "担当者は必須です。" });
+            }
+            if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false && schedule.StartDay.Value.TimeOfDay != TimeSpan.Zero)
+            {
+                return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
+            }
+            if (schedule != null && (schedule.StartDay.Value.TimeOfDay == TimeSpan.Zero || schedule.EndDay.Value.TimeOfDay == TimeSpan.Zero) && schedule.AllDay == false)
+            {
+                return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
+            }
+            if (schedule != null && (schedule.StartDay > schedule.EndDay))
+            {
+                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
+            }
 
-        //    return Json(new { warning = false });
-        //}
+            return Json(new { warning = false });
+        }
 
-
-
-        //[HttpPost]
-        //public IActionResult ChangeDate([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        //{
-        //    if (schedule != null && (schedule.StartDay == null || schedule.EndDay == null) && schedule.AllDay == false)
-        //    {
-        //        return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
-        //    }
-
-        //    return Json(new { warning = false });
-        //}
-
-        //public IActionResult OverStartTime([Bind("Organizer,Title,TypeToDo,AllDay,StartDay,EndDay,JoinPeople")] Schedule schedule)
-        //{
-        //    if (schedule != null && (schedule.StartDay > schedule.EndDay))
-        //    {
-        //        return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
-        //    }
-        //    return Json(new { warning = false });
-        //}
 
         // GET: Schedules/Delete/5
         public async Task<IActionResult> Delete(Guid? id)

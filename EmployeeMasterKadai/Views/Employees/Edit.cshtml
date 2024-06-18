@@ -2,7 +2,7 @@
 
 @{
 
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "社員マスタ編集";
 }
 
 <div>
@@ -34,7 +34,7 @@
         <div id="stylInputDay">
             <div class="form-group" id="retirementDayInput">
                 <label asp-for="RetirementDay" class="control-label"></label>
-                <input asp-for="RetirementDay" class="form-control" type="date"  />
+                <input asp-for="RetirementDay" id="retirementDay" class="form-control" type="date" />
                 <span asp-validation-for="RetirementDay" class="text-danger"></span>
             </div>
         </div>

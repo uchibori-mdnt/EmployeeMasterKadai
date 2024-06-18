@@ -2,10 +2,10 @@
 @using EmployeeMasterKadai.Models
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "スケジュール削除";
 }
 
-<h3>本当に削除しますか？</h3>
+<h3>以下の内容を削除します。よろしいですか？</h3>
 <div>
     <hr />
     <dl class="row">
@@ -13,7 +13,17 @@
             @Html.DisplayNameFor(model => model.Organizer)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Organizer)
+            @{
+                var employeeLists = ViewBag.EmployeeContext as IEnumerable<Employee>;
+                if (Guid.TryParse(Model.Organizer.ToString(), out Guid organizerId))
+                {
+                    var employee = employeeLists.FirstOrDefault(e => e.Id == organizerId);
+                    if (employee != null)
+                    {
+                        <div>@employee.Name</div>
+                    }
+                }               
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
@@ -37,14 +47,31 @@
             @Html.DisplayNameFor(model => model.StartDay)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDay)
+            @{
+                if (Model.AllDay)
+                {
+                    @Model.StartDay?.ToString("yyyy-MM-dd")
+                }
+                else
+                {
+                    @Model.StartDay?.ToString("yyyy-MM-dd HH:mm")
+                }
+            }
         </dd>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndDay)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDay)
+            @{
+                if (Model.AllDay)
+                {
+                    @Model.EndDay?.ToString("yyyy-MM-dd")
+                }
+                else
+                {
+                    @Model.EndDay?.ToString("yyyy-MM-dd HH:mm")
+                }
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.JoinPeople)
@@ -66,7 +93,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <a asp-action="Index" class="btn btn-secondary">戻る</a>
+        <a asp-action="Index" class="btn btn-secondary">キャンセル</a>
         <input type="submit" value="削除" class="btn btn-danger" />
     </form>
 </div>
