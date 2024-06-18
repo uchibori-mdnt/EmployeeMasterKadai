@@ -1,9 +1,7 @@
-﻿﻿using EmployeeMasterKadai.Data;
+﻿using EmployeeMasterKadai.Data;
 using EmployeeMasterKadai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMasterKadai.Controllers
 {

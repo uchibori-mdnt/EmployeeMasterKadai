@@ -1,6 +1,6 @@
 ﻿using EmployeeMasterKadai.Validations;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeMasterKadai.Models
@@ -22,7 +22,6 @@ namespace EmployeeMasterKadai.Models
         [DisplayName("退職日")]
         [DataType(DataType.DateTime)]
         [DateInPast(ErrorMessage = "退職日は本日以前の日付を入力してください。")]
-        //[IfTimesNull(ErrorMessage = "退職日を入力してください。")]
         [Column(TypeName = "DATE")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? RetirementDay { get; set; }

@@ -85,12 +85,11 @@
             <label asp-for="JoinPeople" class="control-label">参加者</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
                 @{
-                    //編集しようとしたデータの参加者一覧
                     HashSet<Guid> selectJoinPeopleLists = new HashSet<Guid>(Model.JoinPeople);
                 }
 
                 @foreach (var employee in ViewBag.People)
-                { //ViewVagは社員マスタの社員一覧が乗っている
+                { 
                     bool isChecked = selectJoinPeopleLists != null && selectJoinPeopleLists.Contains(employee.Id);
 
                     <div class="form-check ml-2">

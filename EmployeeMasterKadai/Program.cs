@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using EmployeeMasterKadai.Data;
+﻿using EmployeeMasterKadai.Data;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EmployeeMasterKadaiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeMasterKadaiContext") ?? throw new InvalidOperationException("Connection string 'EmployeeMasterKadaiContext' not found.")));

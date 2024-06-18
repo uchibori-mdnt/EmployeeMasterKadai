@@ -2,7 +2,6 @@
 using EmployeeMasterKadai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 
 
@@ -60,8 +59,6 @@ namespace EmployeeMasterKadai.Controllers
 
             var model = new Schedule();
             return PartialView(model);
-
-   
         }
 
         // POST: Schedules/Create
@@ -113,14 +110,11 @@ namespace EmployeeMasterKadai.Controllers
                 return NotFound();
             }
 
-
-            // 有効な従業員のIDと名前を取得
             var employees = _context.Employees
                 .Where(e => !e.RetirementFlag)
                 .Select(e => new { e.Id, e.Name })
                 .ToList();
 
-            // ViewBagに従業員のIDと名前を追加
             ViewBag.People = employees;
 
             return PartialView(schedule);
@@ -144,7 +138,6 @@ namespace EmployeeMasterKadai.Controllers
             {
                 try
                 {
-
                     schedule.JoinPeople = selectedEmployeeIds;
 
                     foundScheduleData.Organizer = schedule.Organizer;

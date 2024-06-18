@@ -1,5 +1,4 @@
-﻿using EmployeeMasterKadai.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMasterKadai.Validations
 {

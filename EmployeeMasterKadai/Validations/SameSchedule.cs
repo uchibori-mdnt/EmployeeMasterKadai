@@ -1,7 +1,6 @@
 ﻿using EmployeeMasterKadai.Data;
 using EmployeeMasterKadai.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace EmployeeMasterKadai.Validations
 {

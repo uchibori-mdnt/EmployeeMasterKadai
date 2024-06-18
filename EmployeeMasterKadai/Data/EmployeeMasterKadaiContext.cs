@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using EmployeeMasterKadai.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeMasterKadai.Data
 {
     public class EmployeeMasterKadaiContext : DbContext
     {
-        public EmployeeMasterKadaiContext (DbContextOptions<EmployeeMasterKadaiContext> options)
+        public EmployeeMasterKadaiContext(DbContextOptions<EmployeeMasterKadaiContext> options)
             : base(options)
         {
         }

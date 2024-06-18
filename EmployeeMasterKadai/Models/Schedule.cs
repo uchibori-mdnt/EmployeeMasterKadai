@@ -1,7 +1,6 @@
 ﻿using EmployeeMasterKadai.Validations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeMasterKadai.Models
 {
@@ -22,7 +21,7 @@ namespace EmployeeMasterKadai.Models
         public bool AllDay { get; set; }
         [DisplayName("開始日時")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}",ApplyFormatInEditMode =false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = false)]
         public DateTime? StartDay { get; set; }
         [DisplayName("終了日時")]
         [IsNullScheduleDate(ErrorMessage = "開始時刻と終了時刻を入力してください。")]
