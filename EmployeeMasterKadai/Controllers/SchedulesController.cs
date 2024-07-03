@@ -19,14 +19,19 @@ namespace EmployeeMasterKadai.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index()
         {
-            ViewBag.JoinPeople = _context.Employees
-              .Where(e => !e.RetirementFlag)
-              .Select(e => e.Id)
-              .ToArray();
+            // 社員名をあいうえお順にソートしたリストを ViewBag に追加
+            var employeeList = await _context.Employees.OrderBy(e => e.Name).ToListAsync();
+            ViewBag.EmployeeContext = employeeList;
 
-            ViewBag.EmployeeContext = _context.Employees;
+            // スケジュールを取得し、クライアント側でOrganizerの名前であいうえお順にソートする
+            var schedules = await _context.Schedules.OrderBy(s => s.StartDay).ToListAsync();
 
-            return View(await _context.Schedules.ToListAsync());
+            // クライアント側でOrganizerの名前であいうえお順にソートする
+            var sortedSchedules = schedules.OrderBy(s =>
+                employeeList.FirstOrDefault(e => e.Id == Guid.Parse(s.Organizer))?.Name ?? "")
+                .ToList();
+
+            return View(sortedSchedules);
         }
 
         // GET: Schedules/Details/5
@@ -51,6 +56,7 @@ namespace EmployeeMasterKadai.Controllers
             // 有効な従業員のIDと名前を取得
             var employees = _context.Employees
                 .Where(e => !e.RetirementFlag)
+                .OrderBy(e => e.Name)
                 .Select(e => new { e.Id, e.Name })
                 .ToList();
 
@@ -112,6 +118,7 @@ namespace EmployeeMasterKadai.Controllers
 
             var employees = _context.Employees
                 .Where(e => !e.RetirementFlag)
+                .OrderBy(e => e.Name)
                 .Select(e => new { e.Id, e.Name })
                 .ToList();
 
@@ -212,23 +219,23 @@ namespace EmployeeMasterKadai.Controllers
         {
             if (schedule.Organizer == null)
             {
-                return Json(new { warning = true, message = "件名は必須です。" });
+                return Json(new { warning = true, message = "コントローラー：件名は必須です。" });
             }
             if (schedule.Title == null)
             {
-                return Json(new { warning = true, message = "担当者は必須です。" });
+                return Json(new { warning = true, message = "コントローラー：担当者は必須です。" });
             }
             if (schedule.StartDay != null && schedule.EndDay != null && schedule.StartDay == schedule.EndDay && schedule.AllDay == false && schedule.StartDay.Value.TimeOfDay != TimeSpan.Zero)
             {
-                return Json(new { warning = true, message = "開始時刻と終了時刻が同じになっています。" });
+                return Json(new { warning = true, message = "コントローラー：開始時刻と終了時刻が同じになっています。" });
             }
             if (schedule != null && (schedule.StartDay.Value.TimeOfDay == TimeSpan.Zero || schedule.EndDay.Value.TimeOfDay == TimeSpan.Zero) && schedule.AllDay == false)
             {
-                return Json(new { warning = true, message = "開始時刻と終了時刻を入力してください。" });
+                return Json(new { warning = true, message = "コントローラー：開始時刻と終了時刻を入力してください。" });
             }
             if (schedule != null && (schedule.StartDay > schedule.EndDay))
             {
-                return Json(new { warning = true, message = "開始時刻が終了時刻を超えることはできません。" });
+                return Json(new { warning = true, message = "コントローラー：開始時刻が終了時刻を超えることはできません。" });
             }
 
             return Json(new { warning = false });

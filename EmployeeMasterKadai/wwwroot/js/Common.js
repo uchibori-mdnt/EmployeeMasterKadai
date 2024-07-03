@@ -1,28 +1,32 @@
-﻿
-function scheduleTime() {
-    var dataList = document.getElementById("data-list");
-    // 9:00から18:00までの時間を生成してdatalistに挿入
-    for (var hour = 9; hour <= 18; hour++) {
+﻿function scheduleTime() {
+    var dataList = $("#data-list");
+    // 9:00から17:45までの時間を生成してdatalistに挿入
+    for (var hour = 9; hour < 18; hour++) {
         for (var minute = 0; minute < 60; minute += 15) {
             var option = document.createElement("option");
-            if (hour != 18) {
-                var time = pad(hour) + ":" + pad(minute);
-                option.value = time; 
-                dataList.appendChild(option); 
-            }
-            else {
-                var time = "18:00"; 
-                option.value = time;
-                dataList.appendChild(option);
-            }
+            var time = pad(hour) + ":" + pad(minute);
+            option.value = time;
+            dataList.append(option);
         }
     }
+    // 18:00を1回だけ追加
+    var option = document.createElement("option");
+    option.value = "18:00";
+    option.text = "18:00";
+    dataList.append(option);
+
     function pad(number) {
         return (number < 10 ? "0" : "") + number;
     }
     displayDatalist();
     displayEndDatalist();
 }
+
+// 初期化関数を呼び出す
+$(document).ready(function () {
+    scheduleTime();
+});
+
 
 function displayDatalist() {
     var temp = "";
@@ -70,7 +74,7 @@ $('#modalFooter').html(submitButtonHtml);
 // 登録ボタンorキャンセルボタンが押された時の処理
 $('#modalFooter').on('click', 'input[type="submit"]', function () {
     var clickedButtonValue = $(this).val();
-    var startDateInput = document.getElementById("startDate");
+    var startDateInput = $("#startDate");
 
     if (clickedButtonValue === "登録") {
         if (startDateInput != null) {
@@ -86,10 +90,10 @@ $('#modalFooter').on('click', 'input[type="submit"]', function () {
 
 //スケジュール日付時間を合体
 function combineDateTime() {
-    var startDateInput = document.getElementById("startDate");
-    var startTimeInput = document.getElementById("startTime");
-    var endDateInput = document.getElementById("endDate");
-    var endTimeInput = document.getElementById("endTime");
+    var startDateInput = $("#startDate");
+    var startTimeInput = $("#startTime");
+    var endDateInput = $("#endDate");
+    var endTimeInput = $("#endTime");
 
     if (startDateInput != null && endDateInput != null && startTimeInput != null && endTimeInput != null) {
         var startDate = startDateInput.value;

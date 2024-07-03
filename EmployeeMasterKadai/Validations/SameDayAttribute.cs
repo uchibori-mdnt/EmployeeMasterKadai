@@ -9,7 +9,7 @@ namespace EmployeeMasterKadai.Validations
         {
             if (validationContext.ObjectInstance is Schedule model && model.StartDay != null && model.EndDay != null && model.StartDay == model.EndDay && model.AllDay == false)
             {
-                return new ValidationResult("開始時刻と終了時刻が同じになっています。");
+                return new ValidationResult("サーバーサイド：開始時刻と終了時刻が同じになっています。");
             }
 
             return ValidationResult.Success;

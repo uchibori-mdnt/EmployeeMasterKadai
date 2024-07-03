@@ -13,7 +13,7 @@ namespace EmployeeMasterKadai.Validations
             {
                 if (model.StartDay.Value.TimeOfDay == TimeSpan.Zero && model.AllDay == false)
                 {
-                    return new ValidationResult("開始時刻と終了時刻を入力してください。");
+                    return new ValidationResult("サーバーサイド：開始時刻と終了時刻を入力してください。");
                 }
             }
 

@@ -8,12 +8,12 @@
 <div>
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label asp-for="Title" class="control-label"></label>
             <input asp-for="Title" class="form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label asp-for="Organizer" class="control-label"></label>
             @{
                 var selectList = new SelectList(ViewBag.People, "Id", "Name");
@@ -28,7 +28,7 @@
 
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label asp-for="TypeToDo" class="control-label"></label>
             <select asp-for="TypeToDo" class="form-control">
                 <option value="">指定しない</option>
@@ -39,13 +39,13 @@
             </select>
             <span asp-validation-for="TypeToDo" class="text-danger"></span>
         </div>
-        <div class="form-group form-check">
+        <div class="form-group form-check mb-3">
             <label class="form-check-label">
                 <input id="AllDay" type="checkbox" class="form-check-input" asp-for="AllDay" />
                 @Html.DisplayNameFor(model => model.AllDay)
             </label>
         </div>
-            <div class="form-group" id="startDay">
+        <div class="form-group" id="startDay">
                 <label asp-for="StartDay" class="control-label"></label>
                 <div class="row g-0">
                     <div class="col-md-6">
@@ -60,14 +60,14 @@
                 <span asp-validation-for="StartDay" class="text-danger"></span>
             </div>
 
-            <div class="form-group" id="endDay">
+        <div class="form-group mb-3" id="endDay">
                 <label asp-for="EndDay" class="control-label"></label>
                 <div class="row g-0">
                     <div class="col-md-6">
                         <input id="endDate" class="form-control" type="date" />
                     </div>
                     <div id="endTimeBox" class="col-md-6">     
-                        <input id="endTime" type="text" list="data-list" class="form-control" />    
+                        <input id="endTime" type="text" autocomplete="off" list="data-list" class="form-control" />    
                     </div>
                 </div>
                 <datalist id="data-list"></datalist>
@@ -75,7 +75,7 @@
                 <span asp-validation-for="EndDay" class="text-danger"></span>
             </div>
     
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label asp-for="JoinPeople" class="control-label">参加者</label>
             <div class="scrollable-checkboxes border rounded" style="max-height: 100px; width: 200px; overflow-y: auto;">
 
@@ -91,4 +91,6 @@
         </div>
 
     </form>
+
+
 </div>

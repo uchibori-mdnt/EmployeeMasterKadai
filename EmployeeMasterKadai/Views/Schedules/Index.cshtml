@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "スケジュール";
+    var employeeLists = ViewBag.EmployeeContext as IEnumerable<Employee>;
 }
 
 <!-- 追加モーダルを表示するボタン -->
@@ -42,7 +43,6 @@
         <tr>
             <td>
                 @{
-                    var employeeLists = ViewBag.EmployeeContext as IEnumerable<Employee>;
                     var organizerId = Guid.Parse(item.Organizer);
                     var selectEmployee = employeeLists.FirstOrDefault(e => e.Id == organizerId);
 
@@ -128,7 +128,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title fs-5" id="exampleModalLabel"></div>
+                <div class="modal-title fs-5 mb-1 mt-1" id="exampleModalLabel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
@@ -142,7 +142,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: #f5f5f5 ">
             <div class="modal-header">
-                <div class="modal-title fs-5" id="messageLavel"></div>
+                <div class="modal-title fs-5 mb-1 mt-1" id="messageLavel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
             <div class="modal-body pt-5 pb-5 fw-bold fs-6" id="modalBody"></div>
@@ -173,14 +173,14 @@
 <script src="~/js/Common.js"></script>
 
 <script>
-    var all;
+    let all;
     $(document).ready(function () {
         
         $('.editModal').on('click', function (e) {
             e.preventDefault();
             $('#externalModal').modal('show');
 
-            var itemId = $(this).data('id');
+            const itemId = $(this).data('id');
             all = $(this).data('all');
 
 
@@ -228,11 +228,9 @@
 
         //既存の終日チェック確認
         function setAllDayChecked(allDay) {
-
-            var allDayFlagString = allDay.toString();
-
-            var startTimeBox = $('#startTimeBox');
-            var endTimeBox = $('#endTimeBox');
+            const allDayFlagString = allDay.toString();
+            const startTimeBox = $('#startTimeBox');
+            const endTimeBox = $('#endTimeBox');
 
             if (allDayFlagString === "False") {
                 $('#startTime').prop('readonly', false);
@@ -247,9 +245,9 @@
         }
         //終日チェックの有無で入力フィールド随時変更
         function changeAllDayChecked(check) {
-            var allDayChecked = $(check).prop('checked');
-            var startTimeBox = $('#startTimeBox');
-            var endTimeBox = $('#endTimeBox');
+            const allDayChecked = $(check).prop('checked');
+            const startTimeBox = $('#startTimeBox');
+            const endTimeBox = $('#endTimeBox');
 
             if (allDayChecked) {
                 $('#startTime').prop('readonly', true);
@@ -264,34 +262,31 @@
         }
 
         //クライアントサイド入力チェック
-            const isValid = (startDateValue, startTimeValue, endDateValue, endTimeValue, allDay) => {
+        function isValid(startDateValue, startTimeValue, endDateValue, endTimeValue, allDay) {
             let message = "";
 
-                if ((!startTimeValue || !endTimeValue) && allDay === false) {
-            return "開始時刻と終了時刻を入力してください。";
+            if ((!startTimeValue || !endTimeValue) && allDay === false) {
+                return "クライアントサイド：開始時刻と終了時刻を入力してください。";
             }
-
             if ((startDateValue > endDateValue && allDay === true) || (startDateValue == endDateValue && startTimeValue > endTimeValue && allDay === false)) {
-            message += "開始時刻が終了時刻を超えることはできません。";
+                message += "クライアントサイド：開始時刻が終了時刻を超えることはできません。";
             }
-
             if ((startDateValue > endDateValue && allDay === true) || (startDateValue == endDateValue && startTimeValue == endTimeValue && allDay === false)) {
-            message += "開始時刻と終了時刻が同じになっています。";
+                message += "クライアントサイド：開始時刻と終了時刻が同じになっています。";
             }
-
             return message || null;
         };
+        //ここまで消す
 
         function setupTime() {
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = String(today.getMonth() + 1).padStart(2, '0');
-            var day = String(today.getDate()).padStart(2, '0');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = year + '-' + month + '-' + day;
 
-            var formattedDate = year + '-' + month + '-' + day;
-
-            document.getElementById('startDate').value = formattedDate;
-            document.getElementById('endDate').value = formattedDate;
+            $('#startDate').val(formattedDate);
+            $('#endDate').val(formattedDate);
         }
 
         function reSaveSchedule() {
@@ -305,9 +300,8 @@
             initForm()
         }
 
-        var savedata = null;
 
-        var initForm = () => {
+        function initForm()  {
             const $form = $('#modalContentPlaceholder').find('form');         
 
             $.validator.unobtrusive.parse($form);
@@ -321,24 +315,22 @@
                  }
 
             // 開始日と開始時刻の値を取得
-            const startDateValue = document.getElementById('startDate').value;
-            const startTimeValue = document.getElementById('startTime').value;
-            const endDateValue = document.getElementById('endDate').value;
-            const endTimeValue = document.getElementById('endTime').value;
-            const allDay = document.getElementById('AllDay').checked;
-
-
-
+            const startDateValue = $('#startDate').val();
+            const startTimeValue = $('#startTime').val();
+            const endDateValue = $('#endDate').val();
+            const endTimeValue = $('#endTime').val();
+            const allDay = $('#AllDay').prop('checked');
             const validationMessage = isValid(startDateValue, startTimeValue, endDateValue, endTimeValue, allDay);
+
 
             if (validationMessage) {
                 showErrorModal();
                 serverErrorModal(validationMessage);
                 initForm();
             }
+            //ここまで消す
 
-
-            var callback = function () {
+            const callback = function () {
                 $.ajax({
                     type: 'post',
                     url: $form.attr('action'),
@@ -357,14 +349,14 @@
                 });
             };
 
-            savedata = function() {
+            const savedata = function () {
                 if ($form.attr('action') === '/Schedules/Create') {
                     showConfirmationModal('/Schedules/Create', '新規登録します。よろしいですか？', callback);
                 }
                 else {
                     showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
                 }
-            }
+            }　//ここから
                 if (!validationMessage) {
                     Promise.all([
                         $.ajax({
@@ -390,9 +382,10 @@
                             return;
                         }
 
-                        savedata();
+                         savedata();　ここは残す
                     });                
-                }
+                    }
+                    ここまで消す
                 });
             };        
         });

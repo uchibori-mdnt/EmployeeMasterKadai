@@ -75,7 +75,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title fs-5" id="exampleModalLabel"></div>
+                <div class="modal-title fs-5 mb-1 mt-1" id="exampleModalLabel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
@@ -89,7 +89,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: #f5f5f5">
             <div class="modal-header">
-                <div class="modal-title fs-5" id="messageLavel"></div>
+                <div class="modal-title fs-5  mb-1 mt-1" id="messageLavel"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="CloseBtn" aria-label="Close"></button>
             </div>
             <div class="modal-body pt-5 pb-5 fw-bold fs-6" id="modalBody"></div>
@@ -114,8 +114,8 @@
                 e.preventDefault();
                 $('#externalModal').modal('show');
 
-                var itemId = $(this).data('id');
-                var retirementFlag = $(this).data('retirementflag');
+                const itemId = $(this).data('id');
+                const retirementFlag = $(this).data('retirementflag');
 
                 $.ajax({
                     url: '/Employees/Edit/' + itemId,
@@ -153,8 +153,8 @@
             });
 
             function setFlagChecked(retirementFlag) {
-                var retirementFlagString = retirementFlag.toString();
-                var stylInputDay = $('#stylInputDay');
+                const retirementFlagString = retirementFlag.toString();
+                const stylInputDay = $('#stylInputDay');
 
                 if (retirementFlagString === "False") {
                     $('#retirementDayInput input[type="date"]').prop('disabled', true);
@@ -166,18 +166,18 @@
             }
 
             function getFormattedDate() {
-                var today = new Date();
-                var year = today.getFullYear();
-                var month = String(today.getMonth() + 1).padStart(2, '0');
-                var day = String(today.getDate()).padStart(2, '0');
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
                 return year + '-' + month + '-' + day;
             }
 
             function changeFlagChecked(check) {
-                var retirementFlagChecked = $(check).prop('checked');
-                var retirementDayInput = $('#retirementDayInput input[type="date"]');
+                const retirementFlagChecked = $(check).prop('checked');
+                const retirementDayInput = $('#retirementDayInput input[type="date"]');
 
-                var formattedDate = getFormattedDate();
+                const formattedDate = getFormattedDate();
 
                 if (retirementFlagChecked) {
                     retirementDayInput.prop('disabled', false);
@@ -200,23 +200,23 @@
             }
 
             //クライアントサイド入力チェック
-            const isValid = (retirementDay, retirementFlag) => {
+            function isValid (retirementDay, retirementFlag){
                 let message = "";
-                var formattedDate = getFormattedDate();
+                const formattedDate = getFormattedDate();
 
                 if (retirementDay > formattedDate) {
-                    return "退職日は本日以前の日付を入力してください。";
+                    return "クライアントサイド：退職日は本日以前の日付を入力してください。";
                 }
-
                 if (!retirementDay && retirementFlag == true) {
-                    message += "退職日を入力してください。";
+                    message += "クライアントサイド：退職日を入力してください。";
                 }
                 return message || null;
             };
+            //ここまで消す
 
-            var savedata = null;
 
-            var initForm = (retirementFlag) => {
+
+            function initForm(retirementFlag){
                 const $form = $('#modalContentPlaceholder').find('form');
 
                 // 入力コントロールが読み込まれてから入力チェック機能を有効にする
@@ -229,20 +229,19 @@
                         showErrorModal();
                          return false; 
                     }
-
-                    const retirementDay = document.getElementById('retirementDay').value
-                    const retirementFlag = document.getElementById('retirementFlag').checked;
-
+                    //ここから
+                    const retirementDay = $('#retirementDay').val();
+                    const retirementFlag = $('#retirementFlag').prop('checked');
                     const validationMessage = isValid(retirementDay, retirementFlag);
-                     
+                    //ここまで消す
+
                     if (validationMessage) {
                         showErrorModal();
                         serverErrorModal(validationMessage);
                         initForm();
                     }
 
-
-                    var callback = function () {
+                    const callback = function () {
                         $.ajax({
                             type: 'post',
                             url: $form.attr('action'), 
@@ -259,7 +258,7 @@
                         });
                     };
 
-                    savedata = function () {
+                  let savedata = function () {
                         if ($form.attr('action') === '/Employees/Create') {
                             showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？', callback);
                         } 
@@ -267,6 +266,7 @@
                             showConfirmationModal('/Employees/Update', '更新します。よろしいですか？', callback);
                         }
                     }
+                    //ここから
                     if (!validationMessage) {
                         Promise.all([
                             $.ajax({
@@ -276,16 +276,16 @@
                                 contentType: 'application/x-www-form-urlencoded; charset=utf-8'
                             })
                         ]).then(([errorCheckResponse]) => {
-
+                        console.log(errorCheckResponse)
                             if (errorCheckResponse.warning) {
                                 serverErrorModal(errorCheckResponse.message);
                                 initForm();
                             }
 
-                            savedata();
-                        });
-                    
+                    savedata();　ここは残す
+                        });              
                     }
+                    //ここまで消す
                 });
             };
         });

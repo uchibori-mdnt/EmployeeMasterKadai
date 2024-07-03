@@ -17,7 +17,11 @@ namespace EmployeeMasterKadai.Controllers
         // GET: EmployeeLists
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            var sortedEmployees = await _context.Employees
+               .OrderBy(e => e.Name)
+               .ToListAsync();
+
+            return View(sortedEmployees);
         }
 
         // GET: EmployeeLists/Details/5
@@ -71,22 +75,23 @@ namespace EmployeeMasterKadai.Controllers
         {
             if (employeeList.Name == null)
             {
-                return Json(new { warning = true, message = "社員名を入力してください。" });
+                return Json(new { warning = true, message = "コントローラー：社員名を入力してください。" });
             }
             if (employeeList.Department == null)
             {
-                return Json(new { warning = true, message = "部署を入力してください。" });
+                return Json(new { warning = true, message = "コントローラー：部署を入力してください。" });
             }
             if (employeeList.RetirementDay != null)
             {
                 if (employeeList.RetirementDay > DateTime.Today)
                 {
-                    return Json(new { warning = true, message = "退職日は本日以前の日付を入力してください。" });
+                    Console.WriteLine("コントローラー：退職日が未来の日付です。");
+                    return Json(new { warning = true, message = "コントローラー：退職日は本日以前の日付を入力してください。" });
                 }
             }
             if (employeeList.RetirementFlag && employeeList.RetirementDay == null)
             {
-                return Json(new { warning = true, message = "退職日を入力してください。" });
+                return Json(new { warning = true, message = "コントローラー：退職日を入力してください。" });
             }
 
             return Json(new { warning = false });
