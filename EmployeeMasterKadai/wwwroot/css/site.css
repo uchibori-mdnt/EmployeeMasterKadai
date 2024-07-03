@@ -1,0 +1,4 @@
+#startTimeBox input::-webkit-calendar-picker-indicator,
+#endTimeBox input::-webkit-calendar-picker-indicator {
+    pointer-events: none;
+}

@@ -79,7 +79,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
-            <div class="modal-footer"id="modalFooter"></div>
+            <div class="modal-footer mb-1 mt-1" id="modalFooter"></div>
         </div>
     </div>
 </div>
@@ -200,18 +200,18 @@
             }
 
             //クライアントサイド入力チェック
-            function isValid (retirementDay, retirementFlag){
-                let message = "";
-                const formattedDate = getFormattedDate();
+            // function isValid (retirementDay, retirementFlag){
+            //     let message = "";
+            //     const formattedDate = getFormattedDate();
 
-                if (retirementDay > formattedDate) {
-                    return "クライアントサイド：退職日は本日以前の日付を入力してください。";
-                }
-                if (!retirementDay && retirementFlag == true) {
-                    message += "クライアントサイド：退職日を入力してください。";
-                }
-                return message || null;
-            };
+            //     if (retirementDay > formattedDate) {
+            //         return "クライアントサイド：退職日は本日以前の日付を入力してください。";
+            //     }
+            //     if (!retirementDay && retirementFlag == true) {
+            //         message += "クライアントサイド：退職日を入力してください。";
+            //     }
+            //     return message || null;
+            // };
             //ここまで消す
 
 
@@ -233,13 +233,13 @@
                     const retirementDay = $('#retirementDay').val();
                     const retirementFlag = $('#retirementFlag').prop('checked');
                     const validationMessage = isValid(retirementDay, retirementFlag);
-                    //ここまで消す
 
                     if (validationMessage) {
                         showErrorModal();
                         serverErrorModal(validationMessage);
                         initForm();
                     }
+                    //ここまで消す
 
                     const callback = function () {
                         $.ajax({
@@ -258,7 +258,7 @@
                         });
                     };
 
-                  let savedata = function () {
+                    let savedata = function () {
                         if ($form.attr('action') === '/Employees/Create') {
                             showConfirmationModal('/Employees/Create', '新規登録します。よろしいですか？', callback);
                         } 
@@ -282,7 +282,7 @@
                                 initForm();
                             }
 
-                    savedata();　ここは残す
+                    savedata();　//ここは残す
                         });              
                     }
                     //ここまで消す

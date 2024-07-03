@@ -229,11 +229,11 @@ namespace EmployeeMasterKadai.Controllers
             {
                 return Json(new { warning = true, message = "コントローラー：開始時刻と終了時刻が同じになっています。" });
             }
-            if (schedule != null && (schedule.StartDay.Value.TimeOfDay == TimeSpan.Zero || schedule.EndDay.Value.TimeOfDay == TimeSpan.Zero) && schedule.AllDay == false)
+            if (schedule.StartDay != null && schedule.EndDay != null && (schedule.StartDay.Value.TimeOfDay == TimeSpan.Zero || schedule.EndDay.Value.TimeOfDay == TimeSpan.Zero) && schedule.AllDay == false)
             {
                 return Json(new { warning = true, message = "コントローラー：開始時刻と終了時刻を入力してください。" });
             }
-            if (schedule != null && (schedule.StartDay > schedule.EndDay))
+            if (schedule.AllDay == false && (schedule.StartDay > schedule.EndDay))
             {
                 return Json(new { warning = true, message = "コントローラー：開始時刻が終了時刻を超えることはできません。" });
             }

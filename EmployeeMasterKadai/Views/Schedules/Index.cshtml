@@ -39,7 +39,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @{
@@ -96,13 +96,11 @@
                             }
                         }
                     }
-
             </td>      
             <td>
                 @{
                     HashSet<Guid> selectedEmployeeIds = new HashSet<Guid>(item.JoinPeople);
                 }
-
                 @foreach (var employeeId in item.JoinPeople)
                 {                       
                     var employees = ViewBag.EmployeeContext as IEnumerable<Employee>;
@@ -110,7 +108,6 @@
 
                     <div>@employee.Name</div>
                 }
-
             </td>
             <td>
                 <button type="button" class="btn btn-primary editModal" data-id="@item.Id" data-all="@item.AllDay">
@@ -132,7 +129,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContentPlaceholder"></div>
-            <div class="modal-footer" id="modalFooter"></div>
+            <div class="modal-footer mb-1 mt-1" id="modalFooter"></div>
         </div>
     </div>
 </div>
@@ -356,7 +353,8 @@
                 else {
                     showConfirmationModal('/Schedules/Update', '更新します。よろしいですか？', callback);
                 }
-            }　//ここから
+            }　
+            //ここから
                 if (!validationMessage) {
                     Promise.all([
                         $.ajax({
@@ -374,21 +372,20 @@
                     ]).then(([errorCheckResponse, sameScheduleResponse]) => {
 
                         if (errorCheckResponse.warning) {
-                            serverErrorModal(errorCheckResponse.message);
+                            serverErrorModal(errorCheckResponse.message, savedata);
                             return;
                         }
                         if (sameScheduleResponse.warning) {
                             scheduleErrorModal(sameScheduleResponse.message, savedata);
                             return;
                         }
-
-                         savedata();　ここは残す
+                    savedata();　//ここは残す
                     });                
-                    }
-                    ここまで消す
-                });
-            };        
-        });
+                }
+                //ここまで消す
+            });
+        };        
+    });                         
 </script>
 }
 

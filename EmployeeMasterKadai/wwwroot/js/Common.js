@@ -95,12 +95,11 @@ function combineDateTime() {
     var endDateInput = $("#endDate");
     var endTimeInput = $("#endTime");
 
-    if (startDateInput != null && endDateInput != null && startTimeInput != null && endTimeInput != null) {
-        var startDate = startDateInput.value;
-        var startTime = startTimeInput.value;
-
-        var endDate = endDateInput.value;
-        var endTime = endTimeInput.value;
+    if (startDateInput.length && startTimeInput.length && endDateInput.length && endTimeInput.length) {
+        var startDate = startDateInput.val();
+        var startTime = startTimeInput.val();
+        var endDate = endDateInput.val();
+        var endTime = endTimeInput.val();
 
         var combinedStart = startDate + " " + startTime;
         var combinedEnd = endDate + " " + endTime;
@@ -109,6 +108,7 @@ function combineDateTime() {
         $('#EndDay').val(combinedEnd);
     }
 }
+
 
 
 //スケジュール日付時間を解体、入力フィールドへ表示
@@ -167,6 +167,7 @@ function showConfirmationModal(action, message, callback) {
     $('#modalBody').text(message);
     $('#closeModalBtn').html(checkButtonHtml);
 
+
     $('#closeModalBtn').off('click').on('click', 'input[type="submit"]', function () {
         var checkedButtonValue = $(this).val();
 
@@ -196,7 +197,7 @@ function showErrorModal() {
     });
 }
 
-function scheduleErrorModal(message, savedata) {
+function scheduleErrorModal(message, callback) {
     $('#scheduleModal').modal('show');
     $('#scheduleLavel').text('確認');
     $('#scheduleBody').text(message);
@@ -206,7 +207,7 @@ function scheduleErrorModal(message, savedata) {
         var checkedButtonValue = $(this).val();
         if (checkedButtonValue === "はい") {
             $('#scheduleModal').modal('hide');
-            savedata();
+            callback();
         }
         else if (checkedButtonValue === "いいえ") {
             $('#scheduleModal').modal('hide');
