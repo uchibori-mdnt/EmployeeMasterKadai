@@ -200,18 +200,18 @@
             }
 
             //クライアントサイド入力チェック
-            // function isValid (retirementDay, retirementFlag){
-            //     let message = "";
-            //     const formattedDate = getFormattedDate();
+            function isValid (retirementDay, retirementFlag){
+                let message = "";
+                const formattedDate = getFormattedDate();
 
-            //     if (retirementDay > formattedDate) {
-            //         return "クライアントサイド：退職日は本日以前の日付を入力してください。";
-            //     }
-            //     if (!retirementDay && retirementFlag == true) {
-            //         message += "クライアントサイド：退職日を入力してください。";
-            //     }
-            //     return message || null;
-            // };
+                if (retirementDay > formattedDate) {
+                    return "クライアントサイド：退職日は本日以前の日付を入力してください。";
+                }
+                if (!retirementDay && retirementFlag == true) {
+                    message += "クライアントサイド：退職日を入力してください。";
+                }
+                return message || null;
+            };
             //ここまで消す
 
 
@@ -224,6 +224,7 @@
 
                 $form.on('submit', function (e) {
                     e.preventDefault();
+                    console.log('Submitボタンが押されました');
 
                     if (!$form.valid()) {
                         showErrorModal();
@@ -282,7 +283,7 @@
                                 initForm();
                             }
 
-                    savedata();　//ここは残す
+                     savedata();　//ここは残す
                         });              
                     }
                     //ここまで消す

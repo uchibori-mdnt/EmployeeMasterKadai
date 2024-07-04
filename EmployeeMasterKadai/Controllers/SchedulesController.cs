@@ -27,8 +27,9 @@ namespace EmployeeMasterKadai.Controllers
             var schedules = await _context.Schedules.OrderBy(s => s.StartDay).ToListAsync();
 
             // クライアント側でOrganizerの名前であいうえお順にソートする
-            var sortedSchedules = schedules.OrderBy(s =>
-                employeeList.FirstOrDefault(e => e.Id == Guid.Parse(s.Organizer))?.Name ?? "")
+            var sortedSchedules = schedules
+                .OrderBy(s => s.StartDay)
+                .ThenBy(s => employeeList.FirstOrDefault(e => e.Id == Guid.Parse(s.Organizer))?.Name ?? "")
                 .ToList();
 
             return View(sortedSchedules);
